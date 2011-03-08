@@ -1,0 +1,2 @@
+ * Implement reconnect feature (e.g. on temporary ISP provider failure)
+ * implement proper shut down - QUIT message have to be sent - i.e. MessageSender have to send whole queue before quit on shutdown

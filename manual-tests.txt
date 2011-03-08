@@ -1,0 +1,2 @@
+Send private messages to bot. It have to reply privately.
+Send messages to channel including keywords, bot have to reply if it detects keywords.
