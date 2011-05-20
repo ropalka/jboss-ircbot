@@ -41,7 +41,7 @@ import org.jboss.ircbot.plugins.jira.JIRAServiceConfig.JIRATracker;
 public final class JIRABotService extends AbstractBotService<JIRAServiceConfig>
 {
 
-    private static final Pattern JIRA_ID_PATTERN = Pattern.compile("[A-Z]+-[0-9]+");
+    private static final Pattern JIRA_ID_PATTERN = Pattern.compile("[A-Z]+[1-9][0-9]*-[0-9]+");
 
     public JIRABotService()
     {
