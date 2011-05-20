@@ -55,7 +55,7 @@
         <module name="CovariantEquals"/>
         <!-- Checks cyclomatic complexity against a specified limit. -->
         <module name="CyclomaticComplexity">
-            <property name="max" value="17"/>
+            <property name="max" value="21"/>
         </module>
         <!-- Check that the default is after all the cases in a switch statement. -->
         <module name="DefaultComesLast"/>

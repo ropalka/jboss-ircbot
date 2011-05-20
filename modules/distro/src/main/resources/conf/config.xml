@@ -33,5 +33,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
         <tracker url="https://issues.apache.org/jira/browse"/>
       </config>
     </processor>
+    <processor name="log" class="org.jboss.ircbot.plugins.logs.LoggingBotService"/>
   </processors>
 </server>
