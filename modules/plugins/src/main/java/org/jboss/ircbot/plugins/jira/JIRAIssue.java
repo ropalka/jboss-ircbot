@@ -26,7 +26,6 @@ import static org.jboss.ircbot.Character.LEFT_SQUARE_BRACKET;
 import static org.jboss.ircbot.Character.RIGHT_PARENTHESIS;
 import static org.jboss.ircbot.Character.RIGHT_SQUARE_BRACKET;
 import static org.jboss.ircbot.Character.SPACE;
-import static org.jboss.ircbot.Color.BLACK;
 import static org.jboss.ircbot.Color.DARK_GREEN;
 import static org.jboss.ircbot.Color.OLIVE;
 import static org.jboss.ircbot.Color.PURPLE;
@@ -136,10 +135,10 @@ final class JIRAIssue
     {
         final StringBuilder sb = new StringBuilder();
         // JIRA keyword
-        sb.append(COLON).append(BOLD).append(BLACK).append("jira").append(SPACE);
+        sb.append(COLON).append(BOLD).append("jira").append(BOLD).append(SPACE);
         // JIRA id
         sb.append(NORMAL).append(LEFT_SQUARE_BRACKET).append(DARK_GREEN);
-        sb.append(jiraId).append(BLACK).append(RIGHT_SQUARE_BRACKET).append(SPACE);
+        sb.append(jiraId).append(NORMAL).append(RIGHT_SQUARE_BRACKET).append(SPACE);
         // JIRA description
         if (description != null)
         {
@@ -161,11 +160,11 @@ final class JIRAIssue
         {
             sb.append(type);
         }
-        sb.append(BLACK).append(COMMA).append(SPACE);
+        sb.append(NORMAL).append(COMMA).append(SPACE);
         // JIRA priority
         if (priority != null)
         {
-            sb.append(OLIVE).append(priority).append(BLACK).append(COMMA).append(SPACE);
+            sb.append(OLIVE).append(priority).append(NORMAL).append(COMMA).append(SPACE);
         }
         // JIRA assignee
         if (assignee != null)
@@ -173,7 +172,7 @@ final class JIRAIssue
             sb.append(PURPLE).append(assignee);
         }
         // JIRA URL
-        sb.append(BLACK).append(RIGHT_SQUARE_BRACKET).append(SPACE).append(jiraIssuePage);
+        sb.append(NORMAL).append(RIGHT_SQUARE_BRACKET).append(SPACE).append(jiraIssuePage);
         return sb.toString();
     }
 

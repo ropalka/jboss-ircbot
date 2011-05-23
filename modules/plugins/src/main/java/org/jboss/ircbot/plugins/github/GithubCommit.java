@@ -25,7 +25,6 @@ import static org.jboss.ircbot.Character.PERIOD;
 import static org.jboss.ircbot.Character.RIGHT_SQUARE_BRACKET;
 import static org.jboss.ircbot.Character.SLASH;
 import static org.jboss.ircbot.Character.SPACE;
-import static org.jboss.ircbot.Color.BLACK;
 import static org.jboss.ircbot.Color.BLUE;
 import static org.jboss.ircbot.Color.OLIVE;
 import static org.jboss.ircbot.Color.PURPLE;
@@ -151,16 +150,16 @@ final class GithubCommit
     {
         final StringBuilder sb = new StringBuilder();
         // GIT keyword
-        sb.append(COLON).append(BOLD).append(BLACK).append(GIT_KEYWORD).append(SPACE);
+        sb.append(COLON).append(BOLD).append(GIT_KEYWORD).append(BOLD).append(SPACE);
         // Github project name
         sb.append(NORMAL).append(LEFT_SQUARE_BRACKET).append(BLUE);
-        sb.append(repository).append(BLACK).append(RIGHT_SQUARE_BRACKET).append(SPACE);
+        sb.append(repository).append(NORMAL).append(RIGHT_SQUARE_BRACKET).append(SPACE);
         // commit unique prefix
         sb.append(OLIVE).append(commitId).append(PERIOD).append(PERIOD).append(SPACE);
         // author
         sb.append(PURPLE).append(userName).append(SPACE);
         // description
-        sb.append(BLACK).append(description);
+        sb.append(NORMAL).append(description);
         return sb.toString();
     }
 
