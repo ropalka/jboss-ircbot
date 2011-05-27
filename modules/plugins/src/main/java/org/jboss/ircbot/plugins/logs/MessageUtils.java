@@ -28,7 +28,7 @@ import org.jboss.ircbot.User;
  */
 final class MessageUtils
 {
-    
+
     private MessageUtils()
     {
         // forbidden instantiation
@@ -45,7 +45,7 @@ final class MessageUtils
             return msg.getParams().get(0);
         }
     }
-    
+
     static String getUser(final Message msg)
     {
         final Sender sender = msg.getSender();
@@ -56,5 +56,5 @@ final class MessageUtils
         }
         throw new IllegalStateException();
     }
-    
+
 }

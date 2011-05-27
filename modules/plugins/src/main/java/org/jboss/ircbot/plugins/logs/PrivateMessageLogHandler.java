@@ -31,6 +31,8 @@ import static org.jboss.ircbot.plugins.logs.MessageUtils.getUser;
 
 import java.util.regex.Pattern;
 
+import org.jboss.ircbot.Color;
+import org.jboss.ircbot.Font;
 import org.jboss.ircbot.Message;
 
 /**
@@ -42,7 +44,7 @@ final class PrivateMessageLogHandler implements LogHandler
     private static final String ACTION = "ACTION";
     private static final Pattern ME_MESSAGE_PATTERN = Pattern.compile("\\x01" + ACTION + ".*\\x01");
     private static final LogHandler SINGLETON = new PrivateMessageLogHandler();
-
+    
     private PrivateMessageLogHandler()
     {
         // forbidden inheritance
@@ -93,11 +95,23 @@ final class PrivateMessageLogHandler implements LogHandler
     
     private static String toASCII(final String s)
     {
+        String temp = s;
+        // escape IRC color strings
+        for (final String color : Color.values())
+        {
+            temp = temp.replace(color, "");
+        }
+        // escape IRC font strings
+        for (final String font : Font.values())
+        {
+            temp = temp.replace(font, "");
+        }
+        // escape other non ASCII characters
         final StringBuilder sb = new StringBuilder();
         char c = 0;
-        for (int i = 0; i < s.length(); i++)
+        for (int i = 0; i < temp.length(); i++)
         {
-            c = s.charAt(i);
+            c = temp.charAt(i);
             if (c >= SPACE.charAt(0) && c <= TILDE.charAt(0))
             {
                 sb.append(c);

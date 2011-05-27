@@ -1,4 +1,3 @@
- * jbossbot doesn't log its own messages
  * logging service should detect nick changes
  * logging service process QUIT message improperly - it writes it to every channel. Should write only to channel where user have been connected.
  * Implement reconnect feature (e.g. on temporary ISP provider failure)

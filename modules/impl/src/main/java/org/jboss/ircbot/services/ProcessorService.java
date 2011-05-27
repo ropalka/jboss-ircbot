@@ -58,7 +58,7 @@ public final class ProcessorService implements Service<Void>
         this.producer = producer;
         this.element = element;
     }
-    
+
     Injector<Server> getInjector()
     {
         return injectedConfig;

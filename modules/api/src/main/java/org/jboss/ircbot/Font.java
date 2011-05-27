@@ -19,6 +19,11 @@
  */
 package org.jboss.ircbot;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * IRC message fonts.
  * 
@@ -43,11 +48,35 @@ public final class Font
     public static final String UNDERLINE = "\u001f";
 
     /**
+     * All color values.
+     */
+    private static final Collection<String> ALL_FONTS;
+
+    static
+    {
+        final List<String> values = new LinkedList<String>();
+        values.add(BOLD);
+        values.add(NORMAL);
+        values.add(UNDERLINE);
+        ALL_FONTS = Collections.unmodifiableList(values);
+    }
+
+    /**
      * Constructor.
      */
     private Font()
     {
         // forbidden inheritance
+    }
+
+    /**
+     * Returns all known colors.
+     * 
+     * @return all known colors.
+     */
+    public static Collection<String> values()
+    {
+        return ALL_FONTS;
     }
 
 }

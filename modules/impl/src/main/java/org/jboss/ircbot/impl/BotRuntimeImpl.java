@@ -19,6 +19,8 @@
  */
 package org.jboss.ircbot.impl;
 
+import static org.jboss.ircbot.Character.AT_SIGN;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -29,6 +31,7 @@ import org.jboss.ircbot.ClientMessage;
 import org.jboss.ircbot.Command;
 import org.jboss.ircbot.MessageBuilder;
 import org.jboss.ircbot.MessageFactory;
+import org.jboss.ircbot.Sender;
 import org.jboss.ircbot.ServerConnection;
 
 /**
@@ -46,7 +49,7 @@ public final class BotRuntimeImpl<E> implements BotRuntime<E>
     {
         this.botConfig = botConfig;
         this.serviceConfig = serviceConfig;
-        this.msgFactory = new MessageFactoryImpl(producer);
+        this.msgFactory = new MessageFactoryImpl(producer, botConfig.getBotNick());
     }
 
     public BotConfig getBotConfig()
@@ -79,10 +82,12 @@ public final class BotRuntimeImpl<E> implements BotRuntime<E>
     {
 
         private final BotService<?> producer;
+        private final String botName;
 
-        private MessageFactoryImpl(final BotService<?> producer)
+        private MessageFactoryImpl(final BotService<?> producer, final String botName)
         {
             this.producer = producer;
+            this.botName = botName;
         }
 
         public MessageBuilder newMessage(final Command command)
@@ -91,7 +96,7 @@ public final class BotRuntimeImpl<E> implements BotRuntime<E>
             {
                 throw new IllegalArgumentException("UNKNOWN not acceptable");
             }
-            return new MessageBuilderImpl(command, producer);
+            return new MessageBuilderImpl(command, producer, botName);
         }
 
     }
@@ -99,15 +104,18 @@ public final class BotRuntimeImpl<E> implements BotRuntime<E>
     private static final class MessageBuilderImpl implements MessageBuilder
     {
 
+        private static final String LOCALHOST = "localhost";
         private final BotService<?> producer;
         private final Command command;
+        private final Sender botName;
         private final List<String> params = new LinkedList<String>();
         private boolean finished;
 
-        private MessageBuilderImpl(final Command command, final BotService<?> producer)
+        private MessageBuilderImpl(final Command command, final BotService<?> producer, final String botName)
         {
             this.command = command;
             this.producer = producer;
+            this.botName = newSender(botName);
         }
 
         public MessageBuilder addParam(final String s)
@@ -141,7 +149,14 @@ public final class BotRuntimeImpl<E> implements BotRuntime<E>
                 throw new IllegalStateException();
             }
             finished = true;
-            return new MessageImpl(null, command, null, params, producer);
+            return new MessageImpl(botName, command, null, params, producer);
+        }
+
+        private Sender newSender(final String botName)
+        {
+            final StringBuilder botNameBuilder = new StringBuilder();
+            botNameBuilder.append(botName).append(AT_SIGN).append(LOCALHOST);
+            return SenderFactory.newInstance(botNameBuilder.toString());
         }
 
     }

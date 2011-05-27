@@ -80,12 +80,12 @@ public final class LoggingBotService extends AbstractBotService<Void>
             logMessage(msg);
         }
     }
-    
+
     private boolean isNullSender(final Message msg)
     {
         return msg.getSender() == null;
     }
-    
+
     private void logMessage(final Message msg)
     {
         final LogHandler handler = LOG_HANDLERS.get(msg.getCommand());
@@ -95,7 +95,7 @@ public final class LoggingBotService extends AbstractBotService<Void>
             writeToFileSystem(logMessage);
         }
     }
-    
+
     private void writeToFileSystem(final LogMessage logMessage)
     {
         final String channel = logMessage.getChannel();
@@ -112,7 +112,7 @@ public final class LoggingBotService extends AbstractBotService<Void>
             }
         }
     }
-    
+
     private static void writeToFile(final String channel, final String date, final LogMessage logMessage)
     {
         Writer out = null;
@@ -131,14 +131,14 @@ public final class LoggingBotService extends AbstractBotService<Void>
             safeClose(out);
         }
     }
-        
+
     private static void safeClose(final Closeable closeable)
     {
         if (closeable == null)
         {
             return;
         }
-        
+
         try
         {
             closeable.close();
@@ -148,12 +148,12 @@ public final class LoggingBotService extends AbstractBotService<Void>
             LOG.warn("Unable to close file", e);
         }
     }
-    
+
     private static Writer getOutputStream(final String channel, final String date) throws IOException
     {
         return new FileWriter(getFile(channel, date), true);
     }
-    
+
     private static File getFile(final String channel, final String date) throws IOException
     {
         final File channelDir = new File(channel);

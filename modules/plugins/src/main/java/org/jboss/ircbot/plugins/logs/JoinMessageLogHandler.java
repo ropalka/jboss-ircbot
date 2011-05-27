@@ -39,7 +39,7 @@ final class JoinMessageLogHandler implements LogHandler
     {
         // forbidden inheritance
     }
-    
+
     static LogHandler getInstance()
     {
         return SINGLETON;
@@ -53,7 +53,7 @@ final class JoinMessageLogHandler implements LogHandler
         logBuilder.setDetail(getDetail(msg));
         return logBuilder.build();
     }
-    
+
     private static String getDetail(final Message msg)
     {
         final String user = getUser(msg);
@@ -64,5 +64,5 @@ final class JoinMessageLogHandler implements LogHandler
         sb.append(SPACE).append(channel);
         return sb.toString();
     }
-    
+
 }

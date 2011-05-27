@@ -19,9 +19,7 @@
  */
 package org.jboss.ircbot.impl;
 
-import static org.jboss.ircbot.Character.AT_SIGN;
 import static org.jboss.ircbot.Character.COLON;
-import static org.jboss.ircbot.Character.EXCLAMATION_MARK;
 import static org.jboss.ircbot.Character.SPACE;
 
 import java.util.Collections;
@@ -35,7 +33,6 @@ import org.jboss.ircbot.Command;
 import org.jboss.ircbot.ReplyCode;
 import org.jboss.ircbot.Sender;
 import org.jboss.ircbot.ServerMessage;
-import org.jboss.ircbot.User;
 import org.jboss.logging.Logger;
 
 /**
@@ -101,115 +98,6 @@ public final class MessageImpl implements ServerMessage, ClientMessage
         {
             LOGGER.fatal("Wrong IRC message: " + rawMessage);
             return null;
-        }
-    }
-
-    /**
-     * Sender factory implementation.
-     * 
-     * @author <a href="ropalka@redhat.com">Richard Opalka</a>
-     */
-    private static final class SenderFactory
-    {
-
-        private SenderFactory()
-        {
-            // forbidden inheritance
-        }
-
-        private static Sender newInstance(final String sender)
-        {
-            return sender.contains(AT_SIGN) ? new UserImpl(sender) : new SenderImpl(sender);
-        }
-    }
-
-    /**
-     * Default user implementation.
-     * 
-     * @author <a href="ropalka@redhat.com">Richard Opalka</a>
-     */
-    private static final class UserImpl implements User
-    {
-
-        private static final int TOKEN_COUNT_INCLUDING_USER_INFO = 3;
-        private final String host;
-        private final String nick;
-        private final String user;
-
-        private UserImpl(final String prefix)
-        {
-            final StringTokenizer st = new StringTokenizer(prefix, AT_SIGN + EXCLAMATION_MARK + COLON);
-            if (st.countTokens() == TOKEN_COUNT_INCLUDING_USER_INFO)
-            {
-                nick = st.nextToken();
-                user = st.nextToken();
-                host = st.nextToken();
-            }
-            else
-            {
-                nick = st.nextToken();
-                user = "";
-                host = st.nextToken();
-            }
-        }
-
-        public String getHost()
-        {
-            return host;
-        }
-
-        public String getNickName()
-        {
-            return nick;
-        }
-
-        public String getUserName()
-        {
-            return user;
-        }
-
-        public String toString()
-        {
-            final StringBuilder sb = new StringBuilder();
-            sb.append(nick);
-            if (user != null)
-            {
-                sb.append(EXCLAMATION_MARK);
-                sb.append(user);
-            }
-            sb.append(AT_SIGN);
-            sb.append(host);
-            return sb.toString();
-        }
-    }
-
-    /**
-     * Default sender implementation.
-     * 
-     * @author <a href="ropalka@redhat.com">Richard Opalka</a>
-     */
-    private static final class SenderImpl implements Sender
-    {
-
-        private final String host;
-
-        private SenderImpl(final String host)
-        {
-            final StringTokenizer st = new StringTokenizer(host, COLON);
-            this.host = st.nextToken();
-        }
-
-        public String getHost()
-        {
-            return host;
-        }
-
-        @Override
-        public String toString()
-        {
-            final StringBuilder sb = new StringBuilder();
-            sb.append(host);
-            return sb.toString();
         }
     }
 

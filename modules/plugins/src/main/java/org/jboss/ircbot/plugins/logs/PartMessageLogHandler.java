@@ -34,7 +34,7 @@ final class PartMessageLogHandler implements LogHandler
 {
 
     private static final LogHandler SINGLETON = new PartMessageLogHandler();
-    
+
     private PartMessageLogHandler()
     {
         // forbidden inheritance
@@ -53,7 +53,7 @@ final class PartMessageLogHandler implements LogHandler
         logBuilder.setDetail(getDetail(msg));
         return logBuilder.build();
     }
-    
+
     private static String getDetail(final Message msg)
     {
         final String user = getUser(msg);
@@ -65,5 +65,5 @@ final class PartMessageLogHandler implements LogHandler
         sb.append(SPACE).append("IRC");
         return sb.toString();
     }
-    
+
 }

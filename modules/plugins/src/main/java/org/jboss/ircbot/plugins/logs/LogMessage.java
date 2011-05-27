@@ -69,22 +69,22 @@ final class LogMessage
     private String channel;
     private String color;
     private String detail;
-    
+
     LogMessage()
     {
         super();
     }
-    
+
     void setDate(final String date)
     {
         this.date = date;
     }
-    
+
     String getDate()
     {
         return date;
     }
-    
+
     void setTime(final String time)
     {
         this.time = time;
@@ -100,7 +100,7 @@ final class LogMessage
         assertChannelName(channel);
         this.channel = channel;
     }
-    
+
     private static void assertChannelName(final String channel)
     {
         if (channel.startsWith(AMPERSAND))
@@ -119,7 +119,7 @@ final class LogMessage
         {
             return;
         }
-        
+
         throw new IllegalArgumentException("Incorrect channel name: " + channel);
     }
 
@@ -127,7 +127,7 @@ final class LogMessage
     {
         return channel;
     }
-    
+
     void setColor(final String color)
     {
         this.color = color;
@@ -155,7 +155,7 @@ final class LogMessage
         sb.append(time).append(SPACE).append(getColorString(color)).append(SPACE).append(detail);
         return sb.toString();
     }
-    
+
     private static String getColorString(final String color)
     {
         String colorString = null;

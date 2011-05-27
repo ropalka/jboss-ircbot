@@ -19,6 +19,11 @@
  */
 package org.jboss.ircbot;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * IRC text message colors.
  * 
@@ -108,11 +113,48 @@ public final class Color
     public static final String YELLOW = "\u000308";
 
     /**
+     * All color values.
+     */
+    private static final Collection<String> ALL_COLORS;
+
+    static
+    {
+        final List<String> values = new LinkedList<String>();
+        values.add(BLACK);
+        values.add(BLUE);
+        values.add(BROWN);
+        values.add(CYAN);
+        values.add(DARK_BLUE);
+        values.add(DARK_GREEN);
+        values.add(DARK_GRAY);
+        values.add(GREEN);
+        values.add(LIGHT_GRAY);
+        values.add(MAGENTA);
+        values.add(OLIVE);
+        values.add(PURPLE);
+        values.add(RED);
+        values.add(TEAL);
+        values.add(WHITE);
+        values.add(YELLOW);
+        ALL_COLORS = Collections.unmodifiableList(values);
+    }
+
+    /**
      * Constructor.
      */
     private Color()
     {
         // forbidden inheritance
+    }
+
+    /**
+     * Returns all known colors.
+     * 
+     * @return all known colors.
+     */
+    public static Collection<String> values()
+    {
+        return ALL_COLORS;
     }
 
 }

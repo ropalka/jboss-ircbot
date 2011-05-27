@@ -32,11 +32,11 @@ import java.util.Calendar;
  */
 final class LogMessageBuilder
 {
-    
+
     private static final int TEN = 10;
     private static final int SIXTY = 60;
     private static final String[] TIME_VALUES = new String[SIXTY];
-    
+
     static
     {
         // initialize time values from 0 to 9
@@ -50,7 +50,7 @@ final class LogMessageBuilder
             TIME_VALUES[i] = String.valueOf(i);
         }
     }
-    
+
     final LogMessage delegate;
 
     private LogMessageBuilder()
@@ -59,7 +59,7 @@ final class LogMessageBuilder
         delegate.setDate(getDate());
         delegate.setTime(getTime());
     }
-    
+
     static LogMessageBuilder newInstance()
     {
         return new LogMessageBuilder();
@@ -109,10 +109,10 @@ final class LogMessageBuilder
         // second
         final String second = format(calendar.get(Calendar.SECOND));
         sb.append(second).append(RIGHT_SQUARE_BRACKET);
-        
+
         return sb.toString();
     }
-    
+
     private static String getDate()
     {
         final StringBuilder sb = new StringBuilder();
@@ -126,7 +126,7 @@ final class LogMessageBuilder
         // day
         final String day = format(calendar.get(Calendar.DAY_OF_MONTH));
         sb.append(day);
-        
+
         return sb.toString();
     }
 
