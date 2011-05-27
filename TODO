@@ -1,4 +1,1 @@
- * logging service should detect nick changes
- * logging service process QUIT message improperly - it writes it to every channel. Should write only to channel where user have been connected.
  * Implement reconnect feature (e.g. on temporary ISP provider failure)
- * implement proper shut down - QUIT message have to be sent - i.e. MessageSender have to send whole queue before quit on shutdown

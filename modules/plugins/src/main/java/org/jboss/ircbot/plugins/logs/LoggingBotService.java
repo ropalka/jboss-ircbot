@@ -19,10 +19,7 @@
  */
 package org.jboss.ircbot.plugins.logs;
 
-import static org.jboss.ircbot.Command.JOIN;
-import static org.jboss.ircbot.Command.PART;
 import static org.jboss.ircbot.Command.PRIVMSG;
-import static org.jboss.ircbot.Command.QUIT;
 
 import java.io.Closeable;
 import java.io.File;
@@ -52,10 +49,7 @@ public final class LoggingBotService extends AbstractBotService<Void>
 
     static
     {
-        LOG_HANDLERS.put(JOIN, JoinMessageLogHandler.getInstance());
-        LOG_HANDLERS.put(PART, PartMessageLogHandler.getInstance());
         LOG_HANDLERS.put(PRIVMSG, PrivateMessageLogHandler.getInstance());
-        LOG_HANDLERS.put(QUIT, QuitMessageLogHandler.getInstance());
     }
 
     public LoggingBotService()
