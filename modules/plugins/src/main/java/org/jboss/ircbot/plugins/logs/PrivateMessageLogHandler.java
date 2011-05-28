@@ -24,8 +24,6 @@ import static org.jboss.ircbot.Character.GREATER_THAN;
 import static org.jboss.ircbot.Character.LESS_THAN;
 import static org.jboss.ircbot.Character.SPACE;
 import static org.jboss.ircbot.Character.TILDE;
-import static org.jboss.ircbot.Color.BLACK;
-import static org.jboss.ircbot.Color.PURPLE;
 import static org.jboss.ircbot.plugins.logs.MessageUtils.getChannel;
 import static org.jboss.ircbot.plugins.logs.MessageUtils.getUser;
 
@@ -59,8 +57,7 @@ final class PrivateMessageLogHandler implements LogHandler
     {
         final LogMessageBuilder logBuilder = LogMessageBuilder.newInstance();
         logBuilder.setChannel(getChannel(msg, false));
-        logBuilder.setColor(getColor(msg));
-        logBuilder.setDetail(getDetail(msg));
+        logBuilder.setMessage(getDetail(msg));
         return logBuilder.build();
     }
     
@@ -89,7 +86,12 @@ final class PrivateMessageLogHandler implements LogHandler
         }
         else
         {
-            return toASCII(getMessageBody(msg).trim().substring(ACTION.length() + 1));
+            final String user = getUser(msg);
+            final StringBuilder sb = new StringBuilder();
+            sb.append(user);
+            sb.append(SPACE);
+            sb.append(getMessageBody(msg).trim().substring(ACTION.length() + 1));
+            return toASCII(sb.toString());
         }
     }
     
@@ -119,11 +121,6 @@ final class PrivateMessageLogHandler implements LogHandler
         }
         
         return sb.toString();
-    }
-    
-    private static String getColor(final Message msg)
-    {
-        return isMonologue(msg) ? PURPLE : BLACK;
     }
     
     private static boolean isMonologue(final Message msg)

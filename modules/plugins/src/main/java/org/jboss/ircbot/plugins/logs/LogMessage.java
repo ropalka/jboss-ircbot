@@ -19,22 +19,6 @@
  */
 package org.jboss.ircbot.plugins.logs;
 
-import static org.jboss.ircbot.Color.BLACK;
-import static org.jboss.ircbot.Color.BLUE;
-import static org.jboss.ircbot.Color.BROWN;
-import static org.jboss.ircbot.Color.CYAN;
-import static org.jboss.ircbot.Color.DARK_BLUE;
-import static org.jboss.ircbot.Color.DARK_GREEN;
-import static org.jboss.ircbot.Color.DARK_GRAY;
-import static org.jboss.ircbot.Color.GREEN;
-import static org.jboss.ircbot.Color.LIGHT_GRAY;
-import static org.jboss.ircbot.Color.MAGENTA;
-import static org.jboss.ircbot.Color.OLIVE;
-import static org.jboss.ircbot.Color.PURPLE;
-import static org.jboss.ircbot.Color.RED;
-import static org.jboss.ircbot.Color.TEAL;
-import static org.jboss.ircbot.Color.WHITE;
-import static org.jboss.ircbot.Color.YELLOW;
 import static org.jboss.ircbot.Character.AMPERSAND;
 import static org.jboss.ircbot.Character.EXCLAMATION_MARK;
 import static org.jboss.ircbot.Character.NUMBER_SIGN;
@@ -47,28 +31,10 @@ import static org.jboss.ircbot.Character.SPACE;
 final class LogMessage
 {
 
-    public static final String BLACK_COLOR = "BLACK";
-    public static final String BLUE_COLOR = "BLUE";
-    public static final String BROWN_COLOR = "BROWN";
-    public static final String CYAN_COLOR = "CYAN";
-    public static final String DARK_BLUE_COLOR = "DARK_BLUE";
-    public static final String DARK_GREEN_COLOR = "DARK_GREEN";
-    public static final String DARK_GRAY_COLOR = "DARK_GRAY";
-    public static final String GREEN_COLOR = "GREEN";
-    public static final String LIGHT_GRAY_COLOR = "LIGHT_GRAY";
-    public static final String MAGENTA_COLOR = "MAGENTA";
-    public static final String OLIVE_COLOR = "OLIVE";
-    public static final String PURPLE_COLOR = "PURPLE";
-    public static final String RED_COLOR = "RED";
-    public static final String TEAL_COLOR = "TEAL";
-    public static final String WHITE_COLOR = "WHITE";
-    public static final String YELLOW_COLOR = "YELLOW";
-
     private String date;
     private String time;
     private String channel;
-    private String color;
-    private String detail;
+    private String message;
 
     LogMessage()
     {
@@ -128,108 +94,22 @@ final class LogMessage
         return channel;
     }
 
-    void setColor(final String color)
+    void setMessage(final String message)
     {
-        this.color = color;
+        this.message = message;
     }
 
-    String getColor()
+    String getMessage()
     {
-        return color;
-    }
-
-    void setDetail(final String detail)
-    {
-        this.detail = detail;
-    }
-
-    String getDetail()
-    {
-        return detail;
+        return message;
     }
 
     @Override
     public String toString()
     {
         final StringBuilder sb = new StringBuilder();
-        sb.append(time).append(SPACE).append(getColorString(color)).append(SPACE).append(detail);
+        sb.append(time).append(SPACE).append(message);
         return sb.toString();
-    }
-
-    private static String getColorString(final String color)
-    {
-        String colorString = null;
-        if (BLACK == color)
-        {
-            colorString = BLACK_COLOR;
-        }
-        else if (BLUE == color)
-        {
-            colorString = BLUE_COLOR;
-        }
-        else if (BROWN == color)
-        {
-            colorString = BROWN_COLOR;
-        }
-        else if (CYAN == color)
-        {
-            colorString = CYAN_COLOR;
-        }
-        else if (DARK_BLUE == color)
-        {
-            colorString = DARK_BLUE_COLOR;
-        }
-        else if (DARK_GREEN == color)
-        {
-            colorString = DARK_GREEN_COLOR;
-        }
-        else if (DARK_GRAY == color)
-        {
-            colorString = DARK_GRAY_COLOR;
-        }
-        else if (GREEN == color)
-        {
-            colorString = GREEN_COLOR;
-        }
-        else if (LIGHT_GRAY == color)
-        {
-            colorString = LIGHT_GRAY_COLOR;
-        }
-        else if (MAGENTA == color)
-        {
-            colorString = MAGENTA_COLOR;
-        }
-        else if (OLIVE == color)
-        {
-            colorString = OLIVE_COLOR;
-        }
-        else if (PURPLE == color)
-        {
-            colorString = PURPLE_COLOR;
-        }
-        else if (RED == color)
-        {
-            colorString = RED_COLOR;
-        }
-        else if (TEAL == color)
-        {
-            colorString = TEAL_COLOR;
-        }
-        else if (WHITE == color)
-        {
-            colorString = WHITE_COLOR;
-        }
-        else if (YELLOW == color)
-        {
-            colorString = YELLOW_COLOR;
-        }
-
-        if (colorString == null)
-        {
-            throw new IllegalArgumentException("Unrecognized color " + color);
-        }
-
-        return colorString;
     }
 
 }

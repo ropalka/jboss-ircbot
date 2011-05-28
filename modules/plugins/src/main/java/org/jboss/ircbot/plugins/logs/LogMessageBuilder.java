@@ -71,25 +71,15 @@ final class LogMessageBuilder
         return this;
     }
 
-    LogMessageBuilder setColor(final String color)
+    LogMessageBuilder setMessage(final String message)
     {
-        delegate.setColor(color);
-        return this;
-    }
-
-    LogMessageBuilder setDetail(final String detail)
-    {
-        delegate.setDetail(detail);
+        delegate.setMessage(message);
         return this;
     }
 
     LogMessage build()
     {
-        if (delegate.getColor() == null)
-        {
-            throw new IllegalStateException("Message color not specified");
-        }
-        if (delegate.getDetail() == null)
+        if (delegate.getMessage() == null)
         {
             throw new IllegalStateException("Message detail not specified");
         }
