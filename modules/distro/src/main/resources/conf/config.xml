@@ -18,7 +18,7 @@ You should have received a copy of the GNU Lesser General Public License,
 v.2.1 along with this distribution; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 -->
-<server address="irc.freenode.net" port="6665" nick="jbossircbot" fullname="JBoss IRC Bot">
+<server address="irc.freenode.net" port="6665" nick="jbossircbot" password="" fullname="JBoss IRC Bot">
   <channels>
     <channel name="#praha" />
     <channel name="#jbossaop" />
