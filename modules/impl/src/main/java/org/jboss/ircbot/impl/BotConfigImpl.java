@@ -33,16 +33,18 @@ public final class BotConfigImpl implements BotConfig
     private final int serverPort;
     private final Set<String> serverChannels;
     private final String botNick;
+    private final String botPassword;
     private final String botFullName;
 
     public BotConfigImpl(final String serverAddress, final int serverPort, final Set<String> serverChannels,
-        final String botNick, final String botFullName)
+        final String botNick, final String botFullName, final String botPassword)
     {
         this.serverAddress = serverAddress;
         this.serverPort = serverPort;
         this.serverChannels = serverChannels;
         this.botNick = botNick;
         this.botFullName = botFullName;
+        this.botPassword = botPassword;
     }
 
     public String getServerAddress()
@@ -68,6 +70,11 @@ public final class BotConfigImpl implements BotConfig
     public String getBotFullName()
     {
         return botFullName;
+    }
+
+    public String getBotPassword()
+    {
+        return botPassword;
     }
 
 }

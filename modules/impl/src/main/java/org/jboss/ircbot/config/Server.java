@@ -36,6 +36,9 @@ public interface Server
     @Binding(nodeName = "nick", isElementNode = false)
     String getBotName();
 
+    @Binding(nodeName = "password", isElementNode = false, isNodeMandatory = false)
+    String getBotPassword();
+
     @Binding(nodeName = "fullname", isElementNode = false)
     String getBotFullName();
 

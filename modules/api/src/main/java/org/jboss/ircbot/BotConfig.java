@@ -64,4 +64,11 @@ public interface BotConfig
      */
     String getBotFullName();
 
+    /**
+     * Returns bot password.
+     *
+     * @return bot password or <b>null</b> if not specified.
+     */
+    String getBotPassword();
+
 }

@@ -23,6 +23,7 @@ import static org.jboss.ircbot.Character.COLON;
 import static org.jboss.ircbot.Character.COMMA;
 import static org.jboss.ircbot.Command.JOIN;
 import static org.jboss.ircbot.Command.NICK;
+import static org.jboss.ircbot.Command.NS;
 import static org.jboss.ircbot.Command.QUIT;
 import static org.jboss.ircbot.Command.USER;
 
@@ -42,6 +43,9 @@ import org.jboss.ircbot.MessageBuilder;
 public final class LoginBotService extends AbstractBotService<Void>
 {
 
+    private static final String IDENTIFY = "IDENTIFY";
+    private static final long FIFTEEN_SECONDS = 15000;
+
     public LoginBotService()
     {
         super();
@@ -56,6 +60,22 @@ public final class LoginBotService extends AbstractBotService<Void>
         // USER message
         final ClientMessage userMessage = newUserMessage();
         getConnection().send(userMessage);
+        // NS IDENTIFY message
+        final ClientMessage nsIdentifyMessage = newNickServIdentifyMessage();
+        if (nsIdentifyMessage != null)
+        {
+            getConnection().send(nsIdentifyMessage);
+            try
+            {
+                // wait for NickServ to identify our bot
+                Thread.sleep(FIFTEEN_SECONDS);
+            }
+            catch (final InterruptedException ignore)
+            {
+                // ignored
+            }
+
+        }
         // JOIN message
         final ClientMessage joinMessage = newJoinMessage();
         getConnection().send(joinMessage);
@@ -90,6 +110,19 @@ public final class LoginBotService extends AbstractBotService<Void>
         msgBuilder.addParam(botConfig.getBotNick());
         msgBuilder.addParam(botConfig.getServerAddress());
         msgBuilder.addParam(COLON + botConfig.getBotFullName());
+        return msgBuilder.build();
+    }
+
+    private ClientMessage newNickServIdentifyMessage()
+    {
+        final BotConfig botConfig = getBotConfig();
+        if (botConfig.getBotPassword() == null)
+        {
+            return null;
+        }
+        final MessageBuilder msgBuilder = getMessageFactory().newMessage(NS);
+        msgBuilder.addParam(IDENTIFY);
+        msgBuilder.addParam(botConfig.getBotPassword());
         return msgBuilder.build();
     }
 

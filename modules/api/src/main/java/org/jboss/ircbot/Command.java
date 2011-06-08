@@ -231,6 +231,11 @@ public enum Command
     DIE("DIE"),
 
     /**
+     * NS command.
+     */
+    NS("NS"),
+
+    /**
      * RESTART command.
      */
     RESTART("RESTART"),

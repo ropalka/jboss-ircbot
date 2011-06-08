@@ -100,8 +100,9 @@ public final class ProcessorService implements Service<Void>
         final Set<String> serverChannels = toStringSet(cfg.getChannels());
         final String botNick = cfg.getBotName();
         final String botFullName = cfg.getBotFullName();
+        final String botPassword = cfg.getBotPassword();
 
-        return new BotConfigImpl(serverAddress, serverPort, serverChannels, botNick, botFullName);
+        return new BotConfigImpl(serverAddress, serverPort, serverChannels, botNick, botFullName, botPassword);
     }
 
     private static Set<String> toStringSet(final Channels channels)
