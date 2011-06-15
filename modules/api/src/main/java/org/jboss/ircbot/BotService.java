@@ -1,21 +1,22 @@
 /*
- * JBoss, Home of Professional Open Source
- * Copyright 2011 Red Hat Inc. and/or its affiliates and other contributors
- * as indicated by the @authors tag. All rights reserved.
- * See the copyright.txt in the distribution for a
- * full listing of individual contributors.
+ * JBoss, Home of Professional Open Source Copyright 2011 Red Hat Inc. and/or
+ * its affiliates and other contributors as indicated by the @authors tag. All
+ * rights reserved. See the copyright.txt in the distribution for a full listing
+ * of individual contributors.
  * 
- * This copyrighted material is made available to anyone wishing to use,
- * modify, copy, or redistribute it subject to the terms and conditions
- * of the GNU Lesser General Public License, v. 2.1.
+ * This copyrighted material is made available to anyone wishing to use, modify,
+ * copy, or redistribute it subject to the terms and conditions of the GNU
+ * Lesser General Public License, v. 2.1.
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT A
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
- * PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  * 
  * You should have received a copy of the GNU Lesser General Public License,
  * v.2.1 along with this distribution; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+ * USA.
  */
 package org.jboss.ircbot;
 
@@ -62,8 +63,7 @@ package org.jboss.ircbot;
  *            either X2JB compatible interface or <code>Void</code> if custom
  *            service configuration is not supported.
  */
-public interface BotService<T>
-{
+public interface BotService< T > {
 
     /**
      * Initializes bot service.
@@ -73,7 +73,7 @@ public interface BotService<T>
      * @throws BotException
      *             if some problem occurs
      */
-    void init(BotRuntime<T> runtime) throws BotException;
+    void init( BotRuntime< T > runtime ) throws BotException;
 
     /**
      * Destroys bot service.
@@ -92,7 +92,7 @@ public interface BotService<T>
      * @throws BotException
      *             if ome problem occurs
      */
-    void onMessage(ServerMessage msg) throws BotException;
+    void onMessage( ServerMessage msg ) throws BotException;
 
     /**
      * Each message from IRC bot will result in this method being called. Bot
@@ -103,7 +103,7 @@ public interface BotService<T>
      * @throws BotException
      *             if ome problem occurs
      */
-    void onMessage(ClientMessage msg) throws BotException;
+    void onMessage( ClientMessage msg ) throws BotException;
 
     /**
      * Each bot service can provide its own config. This method have to return
@@ -112,6 +112,5 @@ public interface BotService<T>
      * 
      * @return X2JB compatible interface or null
      */
-    Class<T> getConfigClass();
-
+    Class< T > getConfigClass();
 }

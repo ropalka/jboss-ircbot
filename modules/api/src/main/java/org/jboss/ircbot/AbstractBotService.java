@@ -1,21 +1,22 @@
 /*
- * JBoss, Home of Professional Open Source
- * Copyright 2011 Red Hat Inc. and/or its affiliates and other contributors
- * as indicated by the @authors tag. All rights reserved.
- * See the copyright.txt in the distribution for a
- * full listing of individual contributors.
+ * JBoss, Home of Professional Open Source Copyright 2011 Red Hat Inc. and/or
+ * its affiliates and other contributors as indicated by the @authors tag. All
+ * rights reserved. See the copyright.txt in the distribution for a full listing
+ * of individual contributors.
  * 
- * This copyrighted material is made available to anyone wishing to use,
- * modify, copy, or redistribute it subject to the terms and conditions
- * of the GNU Lesser General Public License, v. 2.1.
+ * This copyrighted material is made available to anyone wishing to use, modify,
+ * copy, or redistribute it subject to the terms and conditions of the GNU
+ * Lesser General Public License, v. 2.1.
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT A
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
- * PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  * 
  * You should have received a copy of the GNU Lesser General Public License,
  * v.2.1 along with this distribution; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+ * USA.
  */
 package org.jboss.ircbot;
 
@@ -28,19 +29,17 @@ package org.jboss.ircbot;
  *            either X2JB compatible interface or <code>Void</code> if custom
  *            service configuration is not supported.
  */
-public abstract class AbstractBotService<T> implements BotService<T>
-{
+public abstract class AbstractBotService< T > implements BotService< T > {
 
     /**
      * Bot service runtime.
      */
-    private BotRuntime<T> runtime;
+    private BotRuntime< T > runtime;
 
     /**
      * Constructor.
      */
-    protected AbstractBotService()
-    {
+    protected AbstractBotService() {
         // intended for inheritance
     }
 
@@ -54,8 +53,7 @@ public abstract class AbstractBotService<T> implements BotService<T>
      * @throws BotException
      *             if some problem occurs
      */
-    public void init(final BotRuntime<T> runtime) throws BotException
-    {
+    public void init( final BotRuntime< T > runtime ) throws BotException {
         this.runtime = runtime;
     }
 
@@ -67,8 +65,7 @@ public abstract class AbstractBotService<T> implements BotService<T>
      * @throws BotException
      *             if some problem occurs
      */
-    public void destroy() throws BotException
-    {
+    public void destroy() throws BotException {
         runtime = null;
     }
 
@@ -82,8 +79,7 @@ public abstract class AbstractBotService<T> implements BotService<T>
      * @throws BotException
      *             if some problem occurs
      */
-    public void onMessage(final ServerMessage msg) throws BotException
-    {
+    public void onMessage( final ServerMessage msg ) throws BotException {
         // does nothing
     }
 
@@ -97,8 +93,7 @@ public abstract class AbstractBotService<T> implements BotService<T>
      * @throws BotException
      *             if some problem occurs
      */
-    public void onMessage(final ClientMessage msg) throws BotException
-    {
+    public void onMessage( final ClientMessage msg ) throws BotException {
         // does nothing
     }
 
@@ -109,8 +104,7 @@ public abstract class AbstractBotService<T> implements BotService<T>
      * 
      * @return <code>null</code>
      */
-    public Class<T> getConfigClass()
-    {
+    public Class< T > getConfigClass() {
         return null;
     }
 
@@ -119,8 +113,7 @@ public abstract class AbstractBotService<T> implements BotService<T>
      * 
      * @return service config
      */
-    protected final T getServiceConfig()
-    {
+    protected final T getServiceConfig() {
         assertRuntimeAvailable();
         return runtime.getServiceConfig();
     }
@@ -130,8 +123,7 @@ public abstract class AbstractBotService<T> implements BotService<T>
      * 
      * @return bot config
      */
-    protected final BotConfig getBotConfig()
-    {
+    protected final BotConfig getBotConfig() {
         assertRuntimeAvailable();
         return runtime.getBotConfig();
     }
@@ -141,8 +133,7 @@ public abstract class AbstractBotService<T> implements BotService<T>
      * 
      * @return message factory
      */
-    protected final MessageFactory getMessageFactory()
-    {
+    protected final MessageFactory getMessageFactory() {
         assertRuntimeAvailable();
         return runtime.getMessageFactory();
     }
@@ -152,8 +143,7 @@ public abstract class AbstractBotService<T> implements BotService<T>
      * 
      * @return server connection
      */
-    protected final ServerConnection getConnection()
-    {
+    protected final ServerConnection getConnection() {
         assertRuntimeAvailable();
         return runtime.getConnection();
     }
@@ -161,9 +151,7 @@ public abstract class AbstractBotService<T> implements BotService<T>
     /**
      * Assert method that ensures proper subclassing.
      */
-    private void assertRuntimeAvailable()
-    {
+    private void assertRuntimeAvailable() {
         assert runtime != null : "Runtime not available. Did U call super.init() in your init() method?";
     }
-
 }

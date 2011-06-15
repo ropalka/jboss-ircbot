@@ -1,21 +1,22 @@
 /*
- * JBoss, Home of Professional Open Source
- * Copyright 2011 Red Hat Inc. and/or its affiliates and other contributors
- * as indicated by the @authors tag. All rights reserved.
- * See the copyright.txt in the distribution for a
- * full listing of individual contributors.
+ * JBoss, Home of Professional Open Source Copyright 2011 Red Hat Inc. and/or
+ * its affiliates and other contributors as indicated by the @authors tag. All
+ * rights reserved. See the copyright.txt in the distribution for a full listing
+ * of individual contributors.
  * 
- * This copyrighted material is made available to anyone wishing to use,
- * modify, copy, or redistribute it subject to the terms and conditions
- * of the GNU Lesser General Public License, v. 2.1.
+ * This copyrighted material is made available to anyone wishing to use, modify,
+ * copy, or redistribute it subject to the terms and conditions of the GNU
+ * Lesser General Public License, v. 2.1.
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT A
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
- * PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  * 
  * You should have received a copy of the GNU Lesser General Public License,
  * v.2.1 along with this distribution; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+ * USA.
  */
 package org.jboss.ircbot.services;
 
@@ -43,88 +44,71 @@ import org.x2jb.bind.XML2Java;
 /**
  * @author <a href="ropalka@redhat.com">Richard Opalka</a>
  */
-public final class ProcessorService implements Service<Void>
-{
+public final class ProcessorService implements Service< Void > {
 
-    private static final Logger LOG = Logger.getLogger(ProcessorService.class);
-    private final BotService<?> producer;
-    private final InjectedValue<Server> injectedConfig = new InjectedValue<Server>();
+    private static final Logger LOG = Logger.getLogger( ProcessorService.class );
+    private final BotService< ? > producer;
+    private final InjectedValue< Server > injectedConfig = new InjectedValue< Server >();
     private BotConfig config;
     private Object pluginConfig;
     private final Element element;
 
-    ProcessorService(final BotService<?> producer, final Element element)
-    {
+    ProcessorService( final BotService< ? > producer, final Element element ) {
         this.producer = producer;
         this.element = element;
     }
 
-    Injector<Server> getInjector()
-    {
+    Injector< Server > getInjector() {
         return injectedConfig;
     }
 
-    private void init()
-    {
-        this.config = toBotConfig(injectedConfig.getValue());
-        final Class<?> configClass = (Class<?>) producer.getConfigClass();
-        if (configClass != null)
-        {
-            pluginConfig = XML2Java.bind(element, configClass);
+    private void init() {
+        this.config = toBotConfig( injectedConfig.getValue() );
+        final Class< ? > configClass = ( Class< ? > ) producer.getConfigClass();
+        if ( configClass != null ) {
+            pluginConfig = XML2Java.bind( element, configClass );
         }
     }
 
-    public Void getValue()
-    {
+    public Void getValue() {
         return null;
     }
 
-    public void start(final StartContext context) throws StartException
-    {
-        try
-        {
+    public void start( final StartContext context ) throws StartException {
+        try {
             init();
-            producer.init(new BotRuntimeImpl(config, pluginConfig, producer));
+            producer.init( new BotRuntimeImpl( config, pluginConfig, producer ) );
         }
-        catch (final Exception e)
-        {
-            LOG.error(e.getMessage(), e);
-            context.failed(new StartException(e));
+        catch ( final Exception e ) {
+            LOG.error( e.getMessage(), e );
+            context.failed( new StartException( e ) );
         }
     }
 
-    private static BotConfig toBotConfig(final Server cfg)
-    {
+    private static BotConfig toBotConfig( final Server cfg ) {
         final String serverAddress = cfg.getAddress();
         final int serverPort = cfg.getPort();
-        final Set<String> serverChannels = toStringSet(cfg.getChannels());
+        final Set< String > serverChannels = toStringSet( cfg.getChannels() );
         final String botNick = cfg.getBotName();
         final String botFullName = cfg.getBotFullName();
         final String botPassword = cfg.getBotPassword();
-
-        return new BotConfigImpl(serverAddress, serverPort, serverChannels, botNick, botFullName, botPassword);
+        return new BotConfigImpl( serverAddress, serverPort, serverChannels, botNick, botFullName, botPassword );
     }
 
-    private static Set<String> toStringSet(final Channels channels)
-    {
-        final Set<String> retVal = new HashSet<String>();
-        for (final Channel channel : channels.getArray())
-        {
-            retVal.add(channel.getName());
+    private static Set< String > toStringSet( final Channels channels ) {
+        final Set< String > retVal = new HashSet< String >();
+        for ( final Channel channel : channels.getArray() ) {
+            retVal.add( channel.getName() );
         }
-        return Collections.unmodifiableSet(retVal);
+        return Collections.unmodifiableSet( retVal );
     }
 
-    public void stop(final StopContext context)
-    {
-        try
-        {
+    public void stop( final StopContext context ) {
+        try {
             producer.destroy();
         }
-        catch (final Exception e)
-        {
-            LOG.error(e.getMessage(), e);
+        catch ( final Exception e ) {
+            LOG.error( e.getMessage(), e );
         }
     }
-
 }

@@ -1,21 +1,22 @@
 /*
- * JBoss, Home of Professional Open Source
- * Copyright 2011 Red Hat Inc. and/or its affiliates and other contributors
- * as indicated by the @authors tag. All rights reserved.
- * See the copyright.txt in the distribution for a
- * full listing of individual contributors.
+ * JBoss, Home of Professional Open Source Copyright 2011 Red Hat Inc. and/or
+ * its affiliates and other contributors as indicated by the @authors tag. All
+ * rights reserved. See the copyright.txt in the distribution for a full listing
+ * of individual contributors.
  * 
- * This copyrighted material is made available to anyone wishing to use,
- * modify, copy, or redistribute it subject to the terms and conditions
- * of the GNU Lesser General Public License, v. 2.1.
+ * This copyrighted material is made available to anyone wishing to use, modify,
+ * copy, or redistribute it subject to the terms and conditions of the GNU
+ * Lesser General Public License, v. 2.1.
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT A
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
- * PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  * 
  * You should have received a copy of the GNU Lesser General Public License,
  * v.2.1 along with this distribution; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+ * USA.
  */
 package org.jboss.ircbot;
 
@@ -27,243 +28,195 @@ import java.util.Map;
  * 
  * @author <a href="ropalka@redhat.com">Richard Opalka</a>
  */
-public enum Command
-{
-
+public enum Command {
     /**
      * Unknown command.
      */
-    UNKNOWN(null),
-
+    UNKNOWN( null ),
     /**
      * PASS command.
      */
-    PASS("PASS"),
-
+    PASS( "PASS" ),
     /**
      * NICK command.
      */
-    NICK("NICK"),
-
+    NICK( "NICK" ),
     /**
      * USER command.
      */
-    USER("USER"),
-
+    USER( "USER" ),
     /**
      * OPER command.
      */
-    OPER("OPER"),
-
+    OPER( "OPER" ),
     /**
      * MODE command.
      */
-    MODE("MODE"),
-
+    MODE( "MODE" ),
     /**
      * SERVICE command.
      */
-    SERVICE("SERVICE"),
-
+    SERVICE( "SERVICE" ),
     /**
      * QUIT command.
      */
-    QUIT("QUIT"),
-
+    QUIT( "QUIT" ),
     /**
      * SQUIT command.
      */
-    SQUIT("SQUIT"),
-
+    SQUIT( "SQUIT" ),
     /**
      * JOIN command.
      */
-    JOIN("JOIN"),
-
+    JOIN( "JOIN" ),
     /**
      * PART command.
      */
-    PART("PART"),
-
+    PART( "PART" ),
     /**
      * TOPIC command.
      */
-    TOPIC("TOPIC"),
-
+    TOPIC( "TOPIC" ),
     /**
      * NAMES command.
      */
-    NAMES("NAMES"),
-
+    NAMES( "NAMES" ),
     /**
      * LIST command.
      */
-    LIST("LIST"),
-
+    LIST( "LIST" ),
     /**
      * INVITE command.
      */
-    INVITE("INVITE"),
-
+    INVITE( "INVITE" ),
     /**
      * KICK command.
      */
-    KICK("KICK"),
-
+    KICK( "KICK" ),
     /**
      * PRIVMSG command.
      */
-    PRIVMSG("PRIVMSG"),
-
+    PRIVMSG( "PRIVMSG" ),
     /**
      * NOTICE command.
      */
-    NOTICE("NOTICE"),
-
+    NOTICE( "NOTICE" ),
     /**
      * MOTD command.
      */
-    MOTD("MOTD"),
-
+    MOTD( "MOTD" ),
     /**
      * LUSERS command.
      */
-    LUSERS("LUSERS"),
-
+    LUSERS( "LUSERS" ),
     /**
      * VERSION command.
      */
-    VERSION("VERSION"),
-
+    VERSION( "VERSION" ),
     /**
      * STATS command.
      */
-    STATS("STATS"),
-
+    STATS( "STATS" ),
     /**
      * LINKS command.
      */
-    LINKS("LINKS"),
-
+    LINKS( "LINKS" ),
     /**
      * TIME command.
      */
-    TIME("TIME"),
-
+    TIME( "TIME" ),
     /**
      * CONNECT command.
      */
-    CONNECT("CONNECT"),
-
+    CONNECT( "CONNECT" ),
     /**
      * TRACE command.
      */
-    TRACE("TRACE"),
-
+    TRACE( "TRACE" ),
     /**
      * ADMIN command.
      */
-    ADMIN("ADMIN"),
-
+    ADMIN( "ADMIN" ),
     /**
      * INFO command.
      */
-    INFO("INFO"),
-
+    INFO( "INFO" ),
     /**
      * SERVLIST command.
      */
-    SERVLIST("SERVLIST"),
-
+    SERVLIST( "SERVLIST" ),
     /**
      * SQUERY command.
      */
-    SQUERY("SQUERY"),
-
+    SQUERY( "SQUERY" ),
     /**
      * WHO command.
      */
-    WHO("WHO"),
-
+    WHO( "WHO" ),
     /**
      * WHOIS command.
      */
-    WHOIS("WHOIS"),
-
+    WHOIS( "WHOIS" ),
     /**
      * WHOWAS command.
      */
-    WHOWAS("WHOWAS"),
-
+    WHOWAS( "WHOWAS" ),
     /**
      * KILL command.
      */
-    KILL("KILL"),
-
+    KILL( "KILL" ),
     /**
      * PING command.
      */
-    PING("PING"),
-
+    PING( "PING" ),
     /**
      * PONG command.
      */
-    PONG("PONG"),
-
+    PONG( "PONG" ),
     /**
      * ERROR command.
      */
-    ERROR("ERROR"),
-
+    ERROR( "ERROR" ),
     /**
      * AWAY command.
      */
-    AWAY("AWAY"),
-
+    AWAY( "AWAY" ),
     /**
      * REHASH command.
      */
-    REHASH("REHASH"),
-
+    REHASH( "REHASH" ),
     /**
      * DIE command.
      */
-    DIE("DIE"),
-
+    DIE( "DIE" ),
     /**
      * NS command.
      */
-    NS("NS"),
-
+    NS( "NS" ),
     /**
      * RESTART command.
      */
-    RESTART("RESTART"),
-
+    RESTART( "RESTART" ),
     /**
      * SUMMON command.
      */
-    SUMMON("SUMMON"),
-
+    SUMMON( "SUMMON" ),
     /**
      * USERS command.
      */
-    USERS("USERS"),
-
+    USERS( "USERS" ),
     /**
      * WALLOPS command.
      */
-    WALLOPS("WALLOPS"),
-
+    WALLOPS( "WALLOPS" ),
     /**
      * USERHOST command.
      */
-    USERHOST("USERHOST"),
-
+    USERHOST( "USERHOST" ),
     /**
      * ISON command.
      */
-    ISON("ISON");
+    ISON( "ISON" );
 
     /**
      * IRC command string.
@@ -276,24 +229,19 @@ public enum Command
      * @param id
      *            IRC command id
      */
-    private Command(final String id)
-    {
+    private Command( final String id ) {
         this.id = id;
     }
 
     /**
      * Commands cache.
      */
-    private static final Map<String, Command> CACHE = new HashMap<String, Command>();
-
-    static
-    {
-        for (final Command command : values())
-        {
+    private static final Map< String, Command > CACHE = new HashMap< String, Command >();
+    static {
+        for ( final Command command : values() ) {
             final String commandID = command.id;
-            if (commandID != null)
-            {
-                CACHE.put(commandID, command);
+            if ( commandID != null ) {
+                CACHE.put( commandID, command );
             }
         }
     }
@@ -306,9 +254,8 @@ public enum Command
      *            command type
      * @return command instance
      */
-    public static Command of(final String type)
-    {
-        final Command element = CACHE.get(type);
+    public static Command of( final String type ) {
+        final Command element = CACHE.get( type );
         return element == null ? UNKNOWN : element;
     }
 
@@ -317,9 +264,7 @@ public enum Command
      * 
      * @return command string
      */
-    public String toString()
-    {
+    public String toString() {
         return id != null ? id : "";
     }
-
 }

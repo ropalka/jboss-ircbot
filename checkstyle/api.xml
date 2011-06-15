@@ -101,8 +101,6 @@
         <module name="FinalParameters">
             <property name="tokens" value="METHOD_DEF,CTOR_DEF,LITERAL_CATCH"/>
         </module>
-        <!-- Checks that the whitespace around the Generic tokens < and > are correct to the typical convention. -->
-        <module name="GenericWhitespace"/>
         <!-- Make sure that utility classes (classes that contain only static methods) do not have a public constructor. -->
         <module name="HideUtilityClassConstructor"/>
         <!-- Catching java.lang.Exception, java.lang.Error or java.lang.RuntimeException is almost never acceptable. -->
@@ -167,12 +165,12 @@
         </module>
         <!-- Checks the placement of left curly braces on types, methods and other blocks. -->
         <module name="LeftCurly">
-            <property name="option" value="nl"/>
-            <property name="maxLineLength" value="120"/>
+            <property name="option" value="eol"/>
+            <property name="maxLineLength" value="180"/>
         </module>
         <!-- Checks for long lines. -->
         <module name="LineLength">
-            <property name="max" value="120"/>
+            <property name="max" value="180"/>
         </module>
         <!-- Checks that local final variable names conform to a format specified by the format property. -->
         <module name="LocalFinalVariableName"/>
@@ -195,7 +193,9 @@
           Checks the padding between the identifier of a method definition, constructor definition,
           method call, or constructor invocation; and the left parenthesis of the parameter list.
         -->
-        <module name="MethodParamPad"/>
+        <module name="MethodParamPad">
+            <property name="option" value="nospace"/>
+        </module>
         <!-- Checks that class type parameter names conform to a format specified by the format property. -->
         <module name="MethodTypeParameterName"/>
         <!-- Checks that classes (except abstract one) define a ctor and don't rely on the default one. -->
@@ -262,7 +262,9 @@
             <property name="max" value="7"/>
         </module>
         <!-- Checks the padding of parentheses. -->
-        <module name="ParenPad"/>
+        <module name="ParenPad">
+            <property name="option" value="space"/>
+        </module>
         <!-- Checks for redundant modifiers in interface and annotation definitions. -->
         <module name="RedundantModifier"/>
         <!-- Checks for redundant exceptions declared in throws clause such as duplicates, unchecked exceptions or subclasses of another declared exception. -->
@@ -319,7 +321,7 @@
         <module name="TypeName"/>
         <!-- Checks the padding of parentheses for typecasts. -->
         <module name="TypecastParenPad">
-            <property name="option" value="nospace"/>
+            <property name="option" value="space"/>
         </module>
         <!-- Detects uncommented main methods. -->
         <module name="UncommentedMain">
@@ -354,7 +356,8 @@
         <property name="eachLine" value="true"/>
     </module>
     <module name="Header">
-        <property name="header" value="/*\n * JBoss, Home of Professional Open Source\n * Copyright 2011 Red Hat Inc. and/or its affiliates and other contributors\n * as indicated by the @authors tag. All rights reserved.\n * See the copyright.txt in the distribution for a\n * full listing of individual contributors.\n * \n * This copyrighted material is made available to anyone wishing to use,\n * modify, copy, or redistribute it subject to the terms and conditions\n * of the GNU Lesser General Public License, v. 2.1.\n * \n * This program is distributed in the hope that it will be useful, but WITHOUT A\n * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A\n * PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.\n * \n * You should have received a copy of the GNU Lesser General Public License,\n * v.2.1 along with this distribution; if not, write to the Free Software\n * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.\n */"/>
+        <property name="header" value="/*\n * JBoss, Home of Professional Open Source Copyright 2011 Red Hat Inc. and/or"/>
+        <property name="charset" value="UTF-8"/>
         <property name="fileExtensions" value="java"/>
     </module>
     <!-- Checks that there is a newline at the end of each file. -->
