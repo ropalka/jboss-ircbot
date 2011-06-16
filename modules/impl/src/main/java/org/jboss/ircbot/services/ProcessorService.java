@@ -74,6 +74,7 @@ public final class ProcessorService implements Service< Void > {
         return null;
     }
 
+    @SuppressWarnings( { "rawtypes", "unchecked" } )
     public void start( final StartContext context ) throws StartException {
         try {
             init();
