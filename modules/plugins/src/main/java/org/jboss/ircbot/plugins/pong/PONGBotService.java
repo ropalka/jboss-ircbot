@@ -38,6 +38,7 @@ public final class PONGBotService extends AbstractBotService< Void > {
         super();
     }
 
+    @Override
     public void onMessage( final ServerMessage msg ) throws BotException {
         if ( PING == msg.getCommand() ) {
             final ClientMessage pongMessage = newPongMessage( msg );

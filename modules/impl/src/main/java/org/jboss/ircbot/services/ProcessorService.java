@@ -63,8 +63,8 @@ public final class ProcessorService implements Service< Void > {
     }
 
     private void init() {
-        this.config = toBotConfig( injectedConfig.getValue() );
-        final Class< ? > configClass = ( Class< ? > ) producer.getConfigClass();
+        config = toBotConfig( injectedConfig.getValue() );
+        final Class< ? > configClass = producer.getConfigClass();
         if ( configClass != null ) {
             pluginConfig = XML2Java.bind( element, configClass );
         }

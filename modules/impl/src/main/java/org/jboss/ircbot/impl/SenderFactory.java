@@ -82,6 +82,7 @@ final class SenderFactory {
             return user;
         }
 
+        @Override
         public String toString() {
             final StringBuilder sb = new StringBuilder();
             sb.append( nick );

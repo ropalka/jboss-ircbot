@@ -52,6 +52,7 @@ public final class ProcessorsService extends AbstractService< Void > {
         // forbidden inheritance
     }
 
+    @Override
     public void start( final StartContext context ) throws StartException {
         try {
             final ServiceContainer container = context.getController().getServiceContainer();
@@ -75,6 +76,7 @@ public final class ProcessorsService extends AbstractService< Void > {
         }
     }
 
+    @Override
     public void stop( final StopContext context ) {
         listeners.clear();
     }

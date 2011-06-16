@@ -47,14 +47,16 @@ public final class JIRABotService extends AbstractBotService< JIRAServiceConfig 
         super();
     }
 
+    @Override
     public void onMessage( final ServerMessage msg ) throws BotException {
         if ( PRIVMSG == msg.getCommand() ) {
             processMessage( msg );
         }
     }
 
+    @Override
     public void onMessage( final ClientMessage msg ) throws BotException {
-        if ( !msg.isOurMessage( this ) && PRIVMSG == msg.getCommand() ) {
+        if ( !msg.isOurMessage( this ) && ( PRIVMSG == msg.getCommand() ) ) {
             processMessage( msg );
         }
     }

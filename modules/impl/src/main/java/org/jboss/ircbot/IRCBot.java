@@ -48,6 +48,7 @@ public final class IRCBot implements Runnable {
             final ServiceContainer container = ServiceContainer.Factory.create( "ircbot" );
             Runtime.getRuntime().addShutdownHook( new Thread( "IRC Bot Shutdown Hook" ) {
 
+                @Override
                 public void run() {
                     LOG.info( "Stopping IRC Bot" );
                     container.shutdown();

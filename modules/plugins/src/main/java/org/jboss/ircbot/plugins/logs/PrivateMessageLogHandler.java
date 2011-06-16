@@ -101,7 +101,7 @@ final class PrivateMessageLogHandler implements LogHandler {
         char c = 0;
         for ( int i = 0; i < temp.length(); i++ ) {
             c = temp.charAt( i );
-            if ( c >= SPACE.charAt( 0 ) && c <= TILDE.charAt( 0 ) ) {
+            if ( ( c >= SPACE.charAt( 0 ) ) && ( c <= TILDE.charAt( 0 ) ) ) {
                 sb.append( c );
             }
         }

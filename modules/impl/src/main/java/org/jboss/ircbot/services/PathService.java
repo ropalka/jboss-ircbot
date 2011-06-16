@@ -34,7 +34,7 @@ public final class PathService extends AbstractService< String > {
     private final String absolutePath;
 
     private PathService( final String fileName ) {
-        if ( fileName == null || fileName.length() == 0 ) {
+        if ( ( fileName == null ) || ( fileName.length() == 0 ) ) {
             throw new IllegalArgumentException( "fileName is null or empty string" );
         }
         absolutePath = new File( fileName ).getAbsolutePath();

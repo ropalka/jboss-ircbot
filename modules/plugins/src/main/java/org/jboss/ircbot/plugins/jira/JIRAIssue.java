@@ -114,6 +114,7 @@ final class JIRAIssue {
         return null;
     }
 
+    @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();
         // JIRA keyword

@@ -264,6 +264,7 @@ public enum Command {
      * 
      * @return command string
      */
+    @Override
     public String toString() {
         return id != null ? id : "";
     }

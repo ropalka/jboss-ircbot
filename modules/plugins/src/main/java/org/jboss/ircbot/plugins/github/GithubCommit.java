@@ -52,7 +52,7 @@ final class GithubCommit {
     private String userName;
     private String description;
     private String repository;
-    private String commitURL;
+    private final String commitURL;
 
     GithubCommit( final String htmlCommitUrl ) {
         final StringTokenizer st = new StringTokenizer( htmlCommitUrl, SLASH );

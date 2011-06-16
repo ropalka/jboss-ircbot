@@ -50,6 +50,7 @@ public final class LoginBotService extends AbstractBotService< Void > {
         super();
     }
 
+    @Override
     public void init( final BotRuntime< Void > runtime ) throws BotException {
         super.init( runtime );
         // NICK message
@@ -75,6 +76,7 @@ public final class LoginBotService extends AbstractBotService< Void > {
         getConnection().send( joinMessage );
     }
 
+    @Override
     public void destroy() throws BotException {
         try {
             // QUIT message

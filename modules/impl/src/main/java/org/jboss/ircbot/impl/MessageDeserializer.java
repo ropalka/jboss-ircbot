@@ -57,7 +57,7 @@ public final class MessageDeserializer implements Runnable {
                     line = null;
                 }
                 else {
-                    Thread.sleep( InboundMessageQueue.TIMEOUT );
+                    Thread.sleep( AbstractMessageQueue.TIMEOUT );
                 }
             }
             catch ( final Exception e ) {

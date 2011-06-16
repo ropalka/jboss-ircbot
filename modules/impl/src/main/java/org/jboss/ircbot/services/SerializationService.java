@@ -47,6 +47,7 @@ public final class SerializationService extends AbstractService< Void > {
         // forbidden inheritance
     }
 
+    @Override
     public void start( final StartContext context ) throws StartException {
         try {
             // deserialization thread

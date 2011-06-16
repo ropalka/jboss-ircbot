@@ -77,7 +77,7 @@ public final class MessageImpl implements ServerMessage, ClientMessage {
             while ( st.hasMoreTokens() ) {
                 params.add( st.nextToken() );
             }
-            if ( command == Command.UNKNOWN && replyCode == ReplyCode.UNKNOWN ) {
+            if ( ( command == Command.UNKNOWN ) && ( replyCode == ReplyCode.UNKNOWN ) ) {
                 LOGGER.warn( "Received message with unknown command or reply code: " + rawMessage );
             }
             return new MessageImpl( sender, command, replyCode, params, null );
@@ -115,6 +115,7 @@ public final class MessageImpl implements ServerMessage, ClientMessage {
         return sb.toString();
     }
 
+    @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();
         if ( prefix != null ) {
