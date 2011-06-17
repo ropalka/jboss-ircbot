@@ -58,8 +58,7 @@ public final class MessageSerializer implements Runnable {
                     out.write( CRLF );
                     out.flush();
                 }
-            }
-            catch ( final Exception e ) {
+            } catch ( final Exception e ) {
                 LOGGER.error( e.getMessage(), e );
             }
         }

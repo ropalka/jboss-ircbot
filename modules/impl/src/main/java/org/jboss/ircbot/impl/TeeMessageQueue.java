@@ -47,8 +47,7 @@ public final class TeeMessageQueue extends AbstractMessageQueue implements Serve
         try {
             IN_QUEUE.add( msgImpl );
             OUT_QUEUE.add( msgImpl );
-        }
-        catch ( final InterruptedException e ) {
+        } catch ( final InterruptedException e ) {
             LOGGER.error( "Not able to add message to the queue", e );
         }
     }

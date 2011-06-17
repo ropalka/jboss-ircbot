@@ -55,18 +55,15 @@ public final class Notifier implements Runnable {
                         try {
                             if ( msg.getProducer() == null ) {
                                 listener.onMessage( ( ServerMessage ) msg );
-                            }
-                            else {
+                            } else {
                                 listener.onMessage( ( ClientMessage ) msg );
                             }
-                        }
-                        catch ( final Exception e ) {
+                        } catch ( final Exception e ) {
                             LOG.error( e.getMessage(), e );
                         }
                     }
                 }
-            }
-            catch ( final InterruptedException e ) {
+            } catch ( final InterruptedException e ) {
                 LOG.error( e.getMessage(), e );
             }
         }

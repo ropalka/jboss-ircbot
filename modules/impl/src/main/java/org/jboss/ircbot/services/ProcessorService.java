@@ -79,8 +79,7 @@ public final class ProcessorService implements Service< Void > {
         try {
             init();
             producer.init( new BotRuntimeImpl( config, pluginConfig, producer ) );
-        }
-        catch ( final Exception e ) {
+        } catch ( final Exception e ) {
             LOG.error( e.getMessage(), e );
             context.failed( new StartException( e ) );
         }
@@ -107,8 +106,7 @@ public final class ProcessorService implements Service< Void > {
     public void stop( final StopContext context ) {
         try {
             producer.destroy();
-        }
-        catch ( final Exception e ) {
+        } catch ( final Exception e ) {
             LOG.error( e.getMessage(), e );
         }
     }

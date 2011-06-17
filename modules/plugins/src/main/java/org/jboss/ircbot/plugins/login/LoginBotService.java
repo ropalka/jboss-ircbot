@@ -66,8 +66,7 @@ public final class LoginBotService extends AbstractBotService< Void > {
             try {
                 // wait for NickServ to identify our bot
                 Thread.sleep( FIFTEEN_SECONDS );
-            }
-            catch ( final InterruptedException ignore ) {
+            } catch ( final InterruptedException ignore ) {
                 // ignored
             }
         }
@@ -82,8 +81,7 @@ public final class LoginBotService extends AbstractBotService< Void > {
             // QUIT message
             final ClientMessage quitMessage = newQuitMessage();
             getConnection().send( quitMessage );
-        }
-        finally {
+        } finally {
             super.destroy();
         }
     }

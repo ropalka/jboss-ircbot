@@ -57,11 +57,9 @@ final class GithubCommitPageScraper {
             final Document doc = getDocument( is );
             final GithubCommitData commitData = XML2Java.bind( doc, GithubCommitData.class );
             transform( commitData, commit );
-        }
-        catch ( final Exception e ) {
+        } catch ( final Exception e ) {
             LOGGER.fatal( e.getMessage(), e );
-        }
-        finally {
+        } finally {
             safeClose( is );
         }
         return commit.getDescription() != null ? commit : null;
@@ -76,8 +74,7 @@ final class GithubCommitPageScraper {
         if ( closeable != null ) {
             try {
                 closeable.close();
-            }
-            catch ( final IOException e ) {
+            } catch ( final IOException e ) {
                 LOGGER.error( e.getMessage(), e );
             }
         }

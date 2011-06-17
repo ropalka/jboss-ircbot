@@ -60,8 +60,7 @@ public final class SerializationService extends AbstractService< Void > {
             final Thread serializerThread = new Thread( serializer, "IRC Bot Message serializer" );
             serializerThread.setDaemon( true );
             serializerThread.start();
-        }
-        catch ( final IOException e ) {
+        } catch ( final IOException e ) {
             LOG.fatal( e.getMessage(), e );
             context.failed( new StartException( e ) );
         }

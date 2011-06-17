@@ -55,12 +55,10 @@ public final class MessageDeserializer implements Runnable {
                         InboundMessageQueue.getInstance().add( msg );
                     }
                     line = null;
-                }
-                else {
+                } else {
                     Thread.sleep( AbstractMessageQueue.TIMEOUT );
                 }
-            }
-            catch ( final Exception e ) {
+            } catch ( final Exception e ) {
                 LOGGER.error( e.getMessage(), e );
             }
         }

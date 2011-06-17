@@ -81,8 +81,7 @@ public final class MessageImpl implements ServerMessage, ClientMessage {
                 LOGGER.warn( "Received message with unknown command or reply code: " + rawMessage );
             }
             return new MessageImpl( sender, command, replyCode, params, null );
-        }
-        catch ( final Exception e ) {
+        } catch ( final Exception e ) {
             LOGGER.fatal( "Wrong IRC message: " + rawMessage );
             return null;
         }

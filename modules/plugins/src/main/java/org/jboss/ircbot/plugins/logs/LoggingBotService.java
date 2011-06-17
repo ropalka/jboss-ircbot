@@ -85,8 +85,7 @@ public final class LoggingBotService extends AbstractBotService< Void > {
         final String date = logMessage.getDate();
         if ( channel != null ) {
             writeToFile( channel, date, logMessage );
-        }
-        else {
+        } else {
             for ( final String configChannel : getBotConfig().getServerChannels() ) {
                 writeToFile( configChannel, date, logMessage );
             }
@@ -99,11 +98,9 @@ public final class LoggingBotService extends AbstractBotService< Void > {
             out = getOutputStream( channel, date );
             out.write( logMessage.toString() );
             out.write( LINE_SEPARATOR );
-        }
-        catch ( final IOException e ) {
+        } catch ( final IOException e ) {
             LOG.warn( "Unable to write to file", e );
-        }
-        finally {
+        } finally {
             safeClose( out );
         }
     }
@@ -114,8 +111,7 @@ public final class LoggingBotService extends AbstractBotService< Void > {
         }
         try {
             closeable.close();
-        }
-        catch ( final IOException e ) {
+        } catch ( final IOException e ) {
             LOG.warn( "Unable to close file", e );
         }
     }

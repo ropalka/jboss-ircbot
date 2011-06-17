@@ -75,8 +75,7 @@ final class PrivateMessageLogHandler implements LogHandler {
     private static String getMessageBodyASCII( final Message msg ) {
         if ( !isMonologue( msg ) ) {
             return toASCII( getMessageBody( msg ) );
-        }
-        else {
+        } else {
             final String user = getUser( msg );
             final StringBuilder sb = new StringBuilder();
             sb.append( user );

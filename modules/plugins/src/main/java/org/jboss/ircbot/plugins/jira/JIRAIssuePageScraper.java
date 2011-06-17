@@ -71,8 +71,7 @@ final class JIRAIssuePageScraper {
                 scrapeStatus( jiraIssue, line, br );
                 scrapeType( jiraIssue, line, br );
             }
-        }
-        catch ( final Exception e ) {
+        } catch ( final Exception e ) {
             LOGGER.fatal( e.getMessage(), e );
         }
         return jiraIssue.getDescription() != null ? jiraIssue : null;

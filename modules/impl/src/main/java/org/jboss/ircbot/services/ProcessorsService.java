@@ -69,8 +69,7 @@ public final class ProcessorsService extends AbstractService< Void > {
             final Thread workerThread = new Thread( new Notifier( listeners ), "Inbound Queue Worker Thread" );
             workerThread.setDaemon( true );
             workerThread.start();
-        }
-        catch ( final Exception e ) {
+        } catch ( final Exception e ) {
             LOG.fatal( e.getMessage(), e );
             context.failed( new StartException( e ) );
         }

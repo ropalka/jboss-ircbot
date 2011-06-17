@@ -36,8 +36,7 @@ final class MessageUtils {
     static String getChannel( final Message msg, final boolean hasColon ) {
         if ( hasColon ) {
             return msg.getParams().get( 0 ).substring( 1 );
-        }
-        else {
+        } else {
             return msg.getParams().get( 0 );
         }
     }

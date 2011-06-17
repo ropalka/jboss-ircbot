@@ -62,8 +62,7 @@ public final class ConnectionService implements Service< Socket > {
             final InetAddress targetAddress = InetAddress.getByName( hostname );
             LOG.trace( "Binding socket to " + hostname + COLON + port );
             socket = new Socket( targetAddress, port );
-        }
-        catch ( final Exception e ) {
+        } catch ( final Exception e ) {
             LOG.fatal( e.getMessage(), e );
             context.failed( new StartException( e ) );
         }
@@ -76,8 +75,7 @@ public final class ConnectionService implements Service< Socket > {
             LOG.trace( "Unbinding socket from " + hostname + COLON + port );
             try {
                 socket.close();
-            }
-            catch ( final IOException e ) {
+            } catch ( final IOException e ) {
                 LOG.warn( e.getMessage(), e );
             }
         }

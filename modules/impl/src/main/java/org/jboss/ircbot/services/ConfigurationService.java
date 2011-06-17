@@ -56,8 +56,7 @@ public final class ConfigurationService implements Service< Server > {
     public void start( final StartContext context ) throws StartException {
         try {
             config = getConfig( injectedConfigFile.getValue() );
-        }
-        catch ( final Exception e ) {
+        } catch ( final Exception e ) {
             LOG.fatal( e.getMessage(), e );
             context.failed( new StartException( e ) );
         }

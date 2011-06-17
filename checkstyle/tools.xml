@@ -271,7 +271,7 @@
         </module>
         <!-- Checks the placement of right curly braces. -->
         <module name="RightCurly">
-            <property name="option" value="alone"/>
+            <property name="option" value="same"/>
         </module>
         <!-- Checks for overly complicated boolean expressions. -->
         <module name="SimplifyBooleanExpression"/>

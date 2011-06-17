@@ -62,8 +62,7 @@ final class SenderFactory {
                 nick = st.nextToken();
                 user = st.nextToken();
                 host = st.nextToken();
-            }
-            else {
+            } else {
                 nick = st.nextToken();
                 user = "";
                 host = st.nextToken();

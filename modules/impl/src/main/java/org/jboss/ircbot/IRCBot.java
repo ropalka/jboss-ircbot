@@ -61,8 +61,7 @@ public final class IRCBot implements Runnable {
             SerializationService.install( serviceTarget );
             ProcessorsService.install( serviceTarget );
             container.awaitTermination();
-        }
-        catch ( final Exception e ) {
+        } catch ( final Exception e ) {
             throw new RuntimeException( e );
         }
     }
