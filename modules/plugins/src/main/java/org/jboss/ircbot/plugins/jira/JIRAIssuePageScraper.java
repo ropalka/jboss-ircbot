@@ -27,6 +27,8 @@ import static org.jboss.ircbot.Character.SLASH;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.CookieHandler;
+import java.net.CookieManager;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.StringTokenizer;
@@ -47,6 +49,10 @@ final class JIRAIssuePageScraper {
     private static final String RESOLUTION_KEYWORD = "resolution-val";
     private static final String STATUS_KEYWORD = "status-val";
     private static final String TYPE_KEYWORD = "type-val";
+
+    static {
+        CookieHandler.setDefault( new CookieManager() );
+    }
 
     private JIRAIssuePageScraper() {
         // forbidden inheritance
