@@ -43,7 +43,7 @@ final class JIRAIssuePageScraper {
     private static final Logger LOGGER = Logger.getLogger( JIRAIssuePageScraper.class );
     private static final JIRAIssuePageScraper INSTANCE = new JIRAIssuePageScraper();
     private static final String ASSIGNEE_KEYWORD = "assignee-val";
-    private static final String DESCRIPTION_KEYWORD = "issue_header_summary";
+    private static final String SUMMARY_KEYWORD = "summary-val";
     private static final String IMG_TAG = "<img";
     private static final String PRIORITY_KEYWORD = "priority-val";
     private static final String RESOLUTION_KEYWORD = "resolution-val";
@@ -71,7 +71,7 @@ final class JIRAIssuePageScraper {
             String line;
             while ( ( line = br.readLine() ) != null ) {
                 scrapeAssignee( jiraIssue, line, br );
-                scrapeDescription( jiraIssue, line );
+                scrapeDescription( jiraIssue, line, br );
                 scrapePriority( jiraIssue, line, br );
                 scrapeResolution( jiraIssue, line, br );
                 scrapeStatus( jiraIssue, line, br );
@@ -87,9 +87,10 @@ final class JIRAIssuePageScraper {
         return new StringTokenizer( line, LESS_THAN + GREATER_THAN );
     }
 
-    private void scrapeDescription( final JIRAIssue issue, final String line ) {
-        if ( line.indexOf( DESCRIPTION_KEYWORD ) != -1 ) {
-            final StringTokenizer st = newTokenizer( line );
+    private void scrapeDescription( final JIRAIssue issue, final String line, final BufferedReader br ) throws IOException {
+        if ( line.indexOf( SUMMARY_KEYWORD ) != -1 ) {
+            br.readLine();
+            final StringTokenizer st = newTokenizer( br.readLine() );
             st.nextToken();
             st.nextToken();
             issue.setDescription( st.nextToken() );
@@ -98,47 +99,48 @@ final class JIRAIssuePageScraper {
 
     private void scrapeAssignee( final JIRAIssue issue, final String line, final BufferedReader br ) throws IOException {
         if ( line.indexOf( ASSIGNEE_KEYWORD ) != -1 ) {
-            final String temp = br.readLine();
-            final StringTokenizer st = newTokenizer( temp );
-            if ( st.countTokens() != 1 ) {
-                st.nextToken();
-                st.nextToken();
-            }
+            final StringTokenizer st = newTokenizer( line.trim() );
+            st.nextToken();
+            st.nextToken();
+            st.nextToken();
             issue.setAssignee( st.nextToken() );
         }
     }
 
     private void scrapeStatus( final JIRAIssue issue, final String line, final BufferedReader br ) throws IOException {
         if ( line.indexOf( STATUS_KEYWORD ) != -1 ) {
-            String temp = br.readLine();
-            if ( temp.indexOf( IMG_TAG ) != -1 ) {
-                temp = br.readLine();
-            }
-            issue.setStatus( temp );
+            final StringTokenizer st = newTokenizer( br.readLine() );
+            st.nextToken();
+            st.nextToken();
+            final String status = st.nextToken();
+            issue.setStatus( status );
         }
     }
 
     private void scrapePriority( final JIRAIssue issue, final String line, final BufferedReader br ) throws IOException {
         if ( line.indexOf( PRIORITY_KEYWORD ) != -1 ) {
-            br.readLine();
-            issue.setPriority( br.readLine() );
+            final StringTokenizer st = newTokenizer( br.readLine() );
+            st.nextToken();
+            st.nextToken();
+            final String priority = st.nextToken();
+            issue.setPriority( priority );
         }
     }
 
     private void scrapeType( final JIRAIssue issue, final String line, final BufferedReader br ) throws IOException {
         if ( line.indexOf( TYPE_KEYWORD ) != -1 ) {
-            br.readLine();
-            issue.setType( br.readLine() );
+            final StringTokenizer st = newTokenizer( br.readLine() );
+            st.nextToken();
+            st.nextToken();
+            final String type = st.nextToken();
+            issue.setType( type );
         }
     }
 
     private void scrapeResolution( final JIRAIssue issue, final String line, final BufferedReader br ) throws IOException {
         if ( line.indexOf( RESOLUTION_KEYWORD ) != -1 ) {
-            String temp = br.readLine();
-            if ( temp.indexOf( IMG_TAG ) != -1 ) {
-                temp = br.readLine();
-            }
-            issue.setResolution( temp );
+            final String resolution = br.readLine();
+            issue.setResolution( resolution );
         }
     }
 }
