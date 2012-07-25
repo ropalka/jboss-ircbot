@@ -100,10 +100,15 @@ final class JIRAIssuePageScraper {
     private void scrapeAssignee( final JIRAIssue issue, final String line, final BufferedReader br ) throws IOException {
         if ( line.indexOf( ASSIGNEE_KEYWORD ) != -1 ) {
             final StringTokenizer st = newTokenizer( line.trim() );
-            st.nextToken();
-            st.nextToken();
-            st.nextToken();
-            issue.setAssignee( st.nextToken() );
+            if ( st.countTokens() > 4 ) {
+                // assignee defined
+                st.nextToken();
+                st.nextToken();
+                st.nextToken();
+                issue.setAssignee( st.nextToken() );
+            } else {
+                issue.setAssignee( "Unassigned" );
+            }
         }
     }
 
