@@ -30,8 +30,14 @@
     <processor name="github.commit" class="org.jboss.ircbot.plugins.github.GithubCommitBotService"/>
     <processor name="jira" class="org.jboss.ircbot.plugins.jira.JIRABotService">
       <config>
-        <tracker url="https://issues.jboss.org/browse"/>
-        <tracker url="https://issues.apache.org/jira/browse"/>
+        <tracker
+          jsonUrl="https://issues.jboss.org/jira/rest/api/2/issue"
+          htmlUrl="https://issues.jboss.org/browse"
+        />
+        <tracker
+          jsonUrl="https://issues.apache.org/jira/rest/api/2/issue"
+          htmlUrl="https://issues.apache.org/jira/browse"
+        />
       </config>
     </processor>
     <processor name="log" class="org.jboss.ircbot.plugins.logs.LoggingBotService"/>

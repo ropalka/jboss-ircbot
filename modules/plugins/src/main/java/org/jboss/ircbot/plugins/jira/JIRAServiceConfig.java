@@ -32,7 +32,10 @@ public interface JIRAServiceConfig {
 
     interface JIRATracker {
 
-        @Binding( nodeName = "url", isElementNode = false )
-        String getURL();
+        @Binding( nodeName = "jsonUrl", isElementNode = false )
+        String getJsonURL();
+
+        @Binding( nodeName = "htmlUrl", isElementNode = false )
+        String getHtmlURL();
     }
 }

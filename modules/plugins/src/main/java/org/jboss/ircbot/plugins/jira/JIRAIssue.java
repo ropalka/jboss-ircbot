@@ -34,15 +34,14 @@ import static org.jboss.ircbot.Color.TEAL;
 import static org.jboss.ircbot.Font.BOLD;
 import static org.jboss.ircbot.Font.NORMAL;
 
-import org.jboss.ircbot.plugins.utils.HTMLHelper;
-
 /**
  * @author <a href="ropalka@redhat.com">Richard Opalka</a>
  */
 final class JIRAIssue {
 
     private final String jiraId;
-    private final String jiraIssuePage;
+    private final String jiraHtmlURL;
+    private final String jiraJsonURL;
     private String description;
     private String assignee;
     private String status;
@@ -50,13 +49,18 @@ final class JIRAIssue {
     private String type;
     private String priority;
 
-    JIRAIssue( final String jiraId, final String jiraIssuePage ) {
+    JIRAIssue( final String jiraId, final String jiraHtmlURL, final String jiraJsonURL ) {
         this.jiraId = jiraId;
-        this.jiraIssuePage = jiraIssuePage;
+        this.jiraHtmlURL = jiraHtmlURL;
+        this.jiraJsonURL = jiraJsonURL;
     }
 
-    String getPageURL() {
-        return jiraIssuePage;
+    String getHtmlURL() {
+        return jiraHtmlURL;
+    }
+    
+    String getJsonURL() {
+        return jiraJsonURL;
     }
 
     String getDescription() {
@@ -64,7 +68,7 @@ final class JIRAIssue {
     }
 
     void setDescription( final String description ) {
-        this.description = trimAndEscape( description );
+        this.description = description;
     }
 
     String getAssignee() {
@@ -72,7 +76,7 @@ final class JIRAIssue {
     }
 
     void setAssignee( final String assignee ) {
-        this.assignee = trimAndEscape( assignee );
+        this.assignee = assignee;
     }
 
     String getStatus() {
@@ -80,7 +84,7 @@ final class JIRAIssue {
     }
 
     void setStatus( final String status ) {
-        this.status = trimAndEscape( status );
+        this.status = status;
     }
 
     String getResolution() {
@@ -88,7 +92,7 @@ final class JIRAIssue {
     }
 
     void setResolution( final String resolution ) {
-        this.resolution = trimAndEscape( resolution );
+        this.resolution = resolution;
     }
 
     String getType() {
@@ -96,7 +100,7 @@ final class JIRAIssue {
     }
 
     void setType( final String type ) {
-        this.type = trimAndEscape( type );
+        this.type = type;
     }
 
     String getPriority() {
@@ -104,14 +108,7 @@ final class JIRAIssue {
     }
 
     void setPriority( final String priority ) {
-        this.priority = trimAndEscape( priority );
-    }
-
-    private String trimAndEscape( final String newValue ) {
-        if ( newValue != null ) {
-            return HTMLHelper.escape( newValue.trim() );
-        }
-        return null;
+        this.priority = priority;
     }
 
     @Override
@@ -123,33 +120,23 @@ final class JIRAIssue {
         sb.append( NORMAL ).append( LEFT_SQUARE_BRACKET ).append( DARK_GREEN );
         sb.append( jiraId ).append( NORMAL ).append( RIGHT_SQUARE_BRACKET ).append( SPACE );
         // JIRA description
-        if ( description != null ) {
-            sb.append( HTMLHelper.escape( description ) ).append( SPACE );
-        }
+        sb.append( description ).append( SPACE );
         sb.append( LEFT_SQUARE_BRACKET ).append( TEAL );
         // JIRA status
-        if ( status != null ) {
-            sb.append( status ).append( SPACE );
-        }
+        sb.append( status ).append( SPACE );
         // JIRA resolution
-        if ( resolution != null ) {
-            sb.append( LEFT_PARENTHESIS ).append( resolution ).append( RIGHT_PARENTHESIS ).append( SPACE );
-        }
+        sb.append( LEFT_PARENTHESIS ).append( resolution ).append( RIGHT_PARENTHESIS ).append( SPACE );
         // JIRA type
-        if ( type != null ) {
-            sb.append( type );
-        }
+        sb.append( type );
         sb.append( NORMAL ).append( COMMA ).append( SPACE );
         // JIRA priority
         if ( priority != null ) {
             sb.append( OLIVE ).append( priority ).append( NORMAL ).append( COMMA ).append( SPACE );
         }
         // JIRA assignee
-        if ( assignee != null ) {
-            sb.append( PURPLE ).append( assignee );
-        }
+        sb.append( PURPLE ).append( assignee );
         // JIRA URL
-        sb.append( NORMAL ).append( RIGHT_SQUARE_BRACKET ).append( SPACE ).append( jiraIssuePage );
+        sb.append( NORMAL ).append( RIGHT_SQUARE_BRACKET ).append( SPACE ).append( jiraHtmlURL );
         return sb.toString();
     }
 }

@@ -66,8 +66,9 @@ public final class JIRABotService extends AbstractBotService< JIRAServiceConfig 
         final Set< String > jiraCandidates = getJIRACandidates( msg );
         for ( final String jiraCandidate : jiraCandidates ) {
             for ( final JIRATracker tracker : getServiceConfig().getTrackers() ) {
-                final String trackerURL = tracker.getURL();
-                final JIRAIssue jiraIssue = JIRAIssuePageScraper.getInstance().scrape( jiraCandidate, trackerURL );
+                final String htmlURL = tracker.getHtmlURL();
+                final String jsonURL = tracker.getJsonURL();
+                final JIRAIssue jiraIssue = JIRAIssuePageScraper.getInstance().scrape( jiraCandidate, htmlURL, jsonURL );
                 if ( jiraIssue != null ) {
                     final MessageBuilder msgBuilder = getMessageFactory().newMessage( PRIVMSG );
                     msgBuilder.addParam( msgTarget );

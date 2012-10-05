@@ -20,19 +20,20 @@
  */
 package org.jboss.ircbot.plugins.jira;
 
-import static org.jboss.ircbot.Character.GREATER_THAN;
-import static org.jboss.ircbot.Character.LESS_THAN;
 import static org.jboss.ircbot.Character.SLASH;
 
-import java.io.BufferedReader;
+import java.io.Closeable;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.InputStream;
 import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.URL;
-import java.net.URLConnection;
-import java.util.StringTokenizer;
 
+import org.fossnova.json.JsonObject;
+import org.fossnova.json.JsonString;
+import org.fossnova.json.JsonValueFactory;
+import org.fossnova.json.stream.JsonReader;
+import org.fossnova.json.stream.JsonStreamFactory;
 import org.jboss.logging.Logger;
 
 /**
@@ -42,14 +43,16 @@ final class JIRAIssuePageScraper {
 
     private static final Logger LOGGER = Logger.getLogger( JIRAIssuePageScraper.class );
     private static final JIRAIssuePageScraper INSTANCE = new JIRAIssuePageScraper();
-    private static final String ASSIGNEE_KEYWORD = "assignee-val";
-    private static final String SUMMARY_KEYWORD = "summary-val";
-    private static final String IMG_TAG = "<img";
-    private static final String PRIORITY_KEYWORD = "priority-val";
-    private static final String RESOLUTION_KEYWORD = "resolution-val";
-    private static final String STATUS_KEYWORD = "status-val";
-    private static final String TYPE_KEYWORD = "type-val";
-
+    private static final String ASSIGNEE = "assignee";
+    private static final String DISPLAY_NAME = "displayName";
+    private static final String ISSUE_TYPE = "issuetype";
+    private static final String NAME = "name";
+    private static final String PRIORITY = "priority";
+    private static final String RESOLUTION = "resolution";
+    private static final String STATUS = "status";
+    private static final String SUMMARY = "summary";
+    private static final String UNASSIGNED = "Unassigned";
+    private static final String UNRESOLVED = "Unresolved";
     static {
         CookieHandler.setDefault( new CookieManager() );
     }
@@ -62,90 +65,81 @@ final class JIRAIssuePageScraper {
         return INSTANCE;
     }
 
-    JIRAIssue scrape( final String jiraId, final String trackerURL ) {
-        final JIRAIssue jiraIssue = new JIRAIssue( jiraId, trackerURL + SLASH + jiraId );
+    JIRAIssue scrape( final String jiraId, final String httpURL, final String jsonURL ) {
+        final JIRAIssue jiraIssue = new JIRAIssue( jiraId, httpURL + SLASH + jiraId, jsonURL + SLASH + jiraId );
+        InputStream is = null;
         try {
-            final URL jiraIssuePage = new URL( jiraIssue.getPageURL() );
-            final URLConnection conn = jiraIssuePage.openConnection();
-            final BufferedReader br = new BufferedReader( new InputStreamReader( conn.getInputStream() ) );
-            String line;
-            while ( ( line = br.readLine() ) != null ) {
-                scrapeAssignee( jiraIssue, line, br );
-                scrapeDescription( jiraIssue, line, br );
-                scrapePriority( jiraIssue, line, br );
-                scrapeResolution( jiraIssue, line, br );
-                scrapeStatus( jiraIssue, line, br );
-                scrapeType( jiraIssue, line, br );
-            }
+            final URL jiraIssuePage = new URL( jiraIssue.getJsonURL() );
+            is = jiraIssuePage.openConnection().getInputStream();
+            final JsonReader jsonReader = JsonStreamFactory.newInstance().newJsonReader( is );
+            final JsonObject jsonObject = ( JsonObject ) JsonValueFactory.newInstance().readFrom( jsonReader );
+            final JsonObject fieldsObject = ( JsonObject ) jsonObject.get( "fields" );
+            scrapeAssignee( jiraIssue, fieldsObject );
+            scrapeDescription( jiraIssue, fieldsObject );
+            scrapePriority( jiraIssue, fieldsObject );
+            scrapeResolution( jiraIssue, fieldsObject );
+            scrapeStatus( jiraIssue, fieldsObject );
+            scrapeType( jiraIssue, fieldsObject );
         } catch ( final Exception e ) {
-            LOGGER.fatal( e.getMessage(), e );
+            LOGGER.error( e.getMessage(), e );
+        } finally {
+            safeClose( is );
         }
         return jiraIssue.getDescription() != null ? jiraIssue : null;
     }
 
-    private StringTokenizer newTokenizer( final String line ) {
-        return new StringTokenizer( line, LESS_THAN + GREATER_THAN );
-    }
-
-    private void scrapeDescription( final JIRAIssue issue, final String line, final BufferedReader br ) throws IOException {
-        if ( line.indexOf( SUMMARY_KEYWORD ) != -1 ) {
-            br.readLine();
-            final StringTokenizer st = newTokenizer( br.readLine() );
-            st.nextToken();
-            st.nextToken();
-            issue.setDescription( st.nextToken() );
+    private void scrapeAssignee( final JIRAIssue issue, final JsonObject fieldsObject ) throws IOException {
+        final JsonObject assignee = ( JsonObject ) fieldsObject.get( ASSIGNEE );
+        if ( assignee != null ) {
+            final JsonString value = ( JsonString ) assignee.get( DISPLAY_NAME );
+            issue.setAssignee( value.getString() );
+        } else {
+            issue.setAssignee( UNASSIGNED );
         }
     }
 
-    private void scrapeAssignee( final JIRAIssue issue, final String line, final BufferedReader br ) throws IOException {
-        if ( line.indexOf( ASSIGNEE_KEYWORD ) != -1 ) {
-            final StringTokenizer st = newTokenizer( line.trim() );
-            if ( st.countTokens() > 4 ) {
-                // assignee defined
-                st.nextToken();
-                st.nextToken();
-                st.nextToken();
-                issue.setAssignee( st.nextToken() );
-            } else {
-                issue.setAssignee( "Unassigned" );
+    private void scrapeDescription( final JIRAIssue issue, final JsonObject fieldsObject ) throws IOException {
+        final JsonString value = ( JsonString ) fieldsObject.get( SUMMARY );
+        issue.setDescription( value.getString() );
+    }
+
+    private void scrapeStatus( final JIRAIssue issue, final JsonObject fieldsObject ) throws IOException {
+        final JsonObject status = ( JsonObject ) fieldsObject.get( STATUS );
+        final JsonString value = ( JsonString ) status.get( NAME );
+        issue.setStatus( value.getString() );
+    }
+
+    private void scrapePriority( final JIRAIssue issue, final JsonObject fieldsObject ) throws IOException {
+        final JsonObject priority = ( JsonObject ) fieldsObject.get( PRIORITY );
+        if ( priority != null ) {
+            final JsonString value = ( JsonString ) priority.get( NAME );
+            issue.setPriority( value.getString() );
+        }
+    }
+
+    private void scrapeType( final JIRAIssue issue, final JsonObject fieldsObject ) throws IOException {
+        final JsonObject issueType = ( JsonObject ) fieldsObject.get( ISSUE_TYPE );
+        final JsonString value = ( JsonString ) issueType.get( NAME );
+        issue.setType( value.getString() );
+    }
+
+    private void scrapeResolution( final JIRAIssue issue, final JsonObject fieldsObject ) throws IOException {
+        final JsonObject resolution = ( JsonObject ) fieldsObject.get( RESOLUTION );
+        if ( resolution != null ) {
+            final JsonString value = ( JsonString ) resolution.get( NAME );
+            issue.setResolution( value.getString() );
+        } else {
+            issue.setResolution( UNRESOLVED );
+        }
+    }
+    
+    private static void safeClose( final Closeable closeable ) {
+        if ( closeable != null ) {
+            try {
+                closeable.close();
+            } catch ( final IOException e ) {
+                LOGGER.error( e.getMessage(), e );
             }
-        }
-    }
-
-    private void scrapeStatus( final JIRAIssue issue, final String line, final BufferedReader br ) throws IOException {
-        if ( line.indexOf( STATUS_KEYWORD ) != -1 ) {
-            final StringTokenizer st = newTokenizer( br.readLine() );
-            st.nextToken();
-            st.nextToken();
-            final String status = st.nextToken();
-            issue.setStatus( status );
-        }
-    }
-
-    private void scrapePriority( final JIRAIssue issue, final String line, final BufferedReader br ) throws IOException {
-        if ( line.indexOf( PRIORITY_KEYWORD ) != -1 ) {
-            final StringTokenizer st = newTokenizer( br.readLine() );
-            st.nextToken();
-            st.nextToken();
-            final String priority = st.nextToken();
-            issue.setPriority( priority );
-        }
-    }
-
-    private void scrapeType( final JIRAIssue issue, final String line, final BufferedReader br ) throws IOException {
-        if ( line.indexOf( TYPE_KEYWORD ) != -1 ) {
-            final StringTokenizer st = newTokenizer( br.readLine() );
-            st.nextToken();
-            st.nextToken();
-            final String type = st.nextToken();
-            issue.setType( type );
-        }
-    }
-
-    private void scrapeResolution( final JIRAIssue issue, final String line, final BufferedReader br ) throws IOException {
-        if ( line.indexOf( RESOLUTION_KEYWORD ) != -1 ) {
-            final String resolution = br.readLine();
-            issue.setResolution( resolution );
         }
     }
 }
