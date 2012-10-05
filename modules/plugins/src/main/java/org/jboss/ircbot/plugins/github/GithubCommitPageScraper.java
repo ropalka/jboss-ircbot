@@ -25,20 +25,26 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
+import org.fossnova.json.JsonObject;
+import org.fossnova.json.JsonString;
+import org.fossnova.json.JsonValueFactory;
+import org.fossnova.json.stream.JsonReader;
+import org.fossnova.json.stream.JsonStreamFactory;
 import org.jboss.logging.Logger;
-import org.w3c.dom.Document;
-import org.x2jb.bind.XML2Java;
 
 /**
+ * For Github commit API see <a
+ * href="http://developer.github.com/v3/git/commits/">this</a> page.
+ * 
  * @author <a href="ropalka@redhat.com">Richard Opalka</a>
  */
 final class GithubCommitPageScraper {
 
     private static final Logger LOGGER = Logger.getLogger( GithubCommitPageScraper.class );
     private static final GithubCommitPageScraper INSTANCE = new GithubCommitPageScraper();
+    private static final String AUTHOR = "author";
+    private static final String MESSAGE = "message";
+    private static final String NAME = "name";
 
     private GithubCommitPageScraper() {
         // forbidden inheritance
@@ -52,22 +58,29 @@ final class GithubCommitPageScraper {
         final GithubCommit commit = new GithubCommit( commitURL );
         InputStream is = null;
         try {
-            final URL githubCommitPage = new URL( commit.getAPICommitURL() );
+            final URL githubCommitPage = new URL( commit.getJsonCommitUrl() );
             is = githubCommitPage.openConnection().getInputStream();
-            final Document doc = getDocument( is );
-            final GithubCommitData commitData = XML2Java.bind( doc, GithubCommitData.class );
-            transform( commitData, commit );
+            final JsonReader jsonReader = JsonStreamFactory.newInstance().newJsonReader( is );
+            final JsonObject jsonCommit = ( JsonObject ) JsonValueFactory.newInstance().readFrom( jsonReader );
+            scrapeAuthor( commit, jsonCommit );
+            scrapeDescription( commit, jsonCommit );
         } catch ( final Exception e ) {
-            LOGGER.fatal( e.getMessage(), e );
+            LOGGER.error( e.getMessage(), e );
         } finally {
             safeClose( is );
         }
         return commit.getDescription() != null ? commit : null;
     }
 
-    private static void transform( final GithubCommitData commitData, final GithubCommit commit ) {
-        commit.setUserName( commitData.getAuthor().getName() );
-        commit.setDescription( commitData.getMessage() );
+    private static void scrapeDescription( final GithubCommit commit, final JsonObject commitData ) {
+        final JsonString msg = ( JsonString ) commitData.get( MESSAGE );
+        commit.setDescription( msg.getString() );
+    }
+
+    private static void scrapeAuthor( final GithubCommit commit, final JsonObject commitData ) {
+        final JsonObject author = ( JsonObject ) commitData.get( AUTHOR );
+        final JsonString authorName = ( JsonString ) author.get( NAME );
+        commit.setUserName( authorName.getString() );
     }
 
     private static void safeClose( final Closeable closeable ) {
@@ -78,12 +91,5 @@ final class GithubCommitPageScraper {
                 LOGGER.error( e.getMessage(), e );
             }
         }
-    }
-
-    private static Document getDocument( final InputStream is ) throws Exception {
-        final DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
-        builderFactory.setIgnoringComments( true );
-        final DocumentBuilder builder = builderFactory.newDocumentBuilder();
-        return builder.parse( is );
     }
 }

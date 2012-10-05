@@ -38,7 +38,7 @@ import org.jboss.ircbot.User;
  */
 public final class GithubCommitBotService extends AbstractBotService< Void > {
 
-    private static final Pattern GITHUB_COMMIT_PATTERN = Pattern.compile( "https://github.com/.*/commit/[0-9a-f]*" );
+    private static final Pattern GITHUB_COMMIT_PATTERN = Pattern.compile( "https://github.com/\\S+/commit/[0-9a-f]+" );
 
     public GithubCommitBotService() {
         super();

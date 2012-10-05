@@ -34,25 +34,24 @@ import static org.jboss.ircbot.Font.NORMAL;
 
 import java.util.StringTokenizer;
 
-import org.jboss.ircbot.plugins.utils.HTMLHelper;
-
 /**
  * For Github commit API see <a
- * href="http://develop.github.com/p/commits.html">this</a> page.
+ * href="http://developer.github.com/v3/git/commits/">this</a> page.
  * 
  * @author <a href="ropalka@redhat.com">Richard Opalka</a>
  */
 final class GithubCommit {
 
-    private static final String GIT_HUB_API_PREFIX = "http://github.com/api/v2/xml/commits/show/";
+    private static final String GIT_HUB_API_PREFIX = "https://api.github.com/repos/ropalka/jboss-as/git/commits/";
     private static final int SHA_UPPER_BOUND = 7;
     private static final String GIT_KEYWORD = "git";
     private String commitId;
+    private String commitIdFull;
     private String userId;
     private String userName;
     private String description;
     private String repository;
-    private final String commitURL;
+    private final String jsonCommitUrl;
 
     GithubCommit( final String htmlCommitUrl ) {
         final StringTokenizer st = new StringTokenizer( htmlCommitUrl, SLASH );
@@ -71,18 +70,16 @@ final class GithubCommit {
         // construct commit URL
         final StringBuilder sb = new StringBuilder();
         sb.append( GIT_HUB_API_PREFIX );
-        sb.append( userId ).append( SLASH );
-        sb.append( repository ).append( SLASH );
-        sb.append( commitId );
-        commitURL = new String( sb );
+        sb.append( commitIdFull );
+        jsonCommitUrl = new String( sb );
     }
 
-    String getAPICommitURL() {
-        return commitURL;
+    String getJsonCommitUrl() {
+        return jsonCommitUrl;
     }
 
     void setUserName( final String userName ) {
-        this.userName = trimAndEscape( userName );
+        this.userName = userName;
     }
 
     String getUserName() {
@@ -90,7 +87,7 @@ final class GithubCommit {
     }
 
     void setUserId( final String userId ) {
-        this.userId = trimAndEscape( userId );
+        this.userId = userId;
     }
 
     String getUserId() {
@@ -98,7 +95,8 @@ final class GithubCommit {
     }
 
     void setCommitId( final String commitId ) {
-        this.commitId = trimAndEscape( commitId.substring( 0, SHA_UPPER_BOUND ) );
+        this.commitIdFull = commitId;
+        this.commitId = commitId.substring( 0, SHA_UPPER_BOUND );
     }
 
     String getCommitId() {
@@ -106,7 +104,7 @@ final class GithubCommit {
     }
 
     void setDescription( final String description ) {
-        this.description = trimAndEscape( description );
+        this.description = description;
     }
 
     String getDescription() {
@@ -114,18 +112,11 @@ final class GithubCommit {
     }
 
     void setRepository( final String repository ) {
-        this.repository = trimAndEscape( repository );
+        this.repository = repository;
     }
 
     String getRepository() {
         return repository;
-    }
-
-    private String trimAndEscape( final String newValue ) {
-        if ( newValue != null ) {
-            return HTMLHelper.escape( newValue.trim() );
-        }
-        return null;
     }
 
     @Override
