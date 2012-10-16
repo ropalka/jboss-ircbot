@@ -63,6 +63,8 @@
       <unpack>false</unpack>
       <includes>
         <include>org.fossnova:fossnova-factory-finder:jar</include>
+        <include>org.fossnova:fossnova-fue-api:jar</include>
+        <include>org.fossnova:fossnova-fue-impl:jar</include>
         <include>org.fossnova:fossnova-json-api:jar</include>
         <include>org.fossnova:fossnova-json-impl:jar</include>
         <include>org.jboss.logging:jboss-logging:jar</include>

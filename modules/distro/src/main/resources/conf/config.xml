@@ -28,6 +28,26 @@
     <processor name="login" class="org.jboss.ircbot.plugins.login.LoginBotService"/>
     <processor name="pong" class="org.jboss.ircbot.plugins.pong.PONGBotService"/>
     <processor name="github.commit" class="org.jboss.ircbot.plugins.github.GithubCommitBotService"/>
+    <processor name="github.push" class="org.jboss.ircbot.plugins.github.GithubPushBotService">
+      <config httpServerHost="127.0.0.1" httpServerPort="8180">
+        <notify
+          channel="#praha"
+          repository="https://github.com/ropalka/metadata"
+        />
+        <notify
+          channel="#praha"
+          repository="https://github.com/ropalka/jboss-as"
+        />
+        <notify
+          channel="#jbossaop"
+          repository="https://github.com/ropalka/jboss-as"
+        />
+        <notify
+          channel="#praha"
+          repository="https://github.com/ropalka/jboss-modules/"
+        />
+      </config>
+    </processor>
     <processor name="jira" class="org.jboss.ircbot.plugins.jira.JIRABotService">
       <config>
         <tracker

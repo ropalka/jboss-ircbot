@@ -2,6 +2,8 @@
 
 IRCBOT_HOME=`pwd`/..
 CP=$CP:$IRCBOT_HOME/lib/fossnova-factory-finder.jar
+CP=$CP:$IRCBOT_HOME/lib/fossnova-fue-api.jar
+CP=$CP:$IRCBOT_HOME/lib/fossnova-fue-impl.jar
 CP=$CP:$IRCBOT_HOME/lib/fossnova-json-api.jar
 CP=$CP:$IRCBOT_HOME/lib/fossnova-json-impl.jar
 CP=$CP:$IRCBOT_HOME/lib/ircbot-api.jar

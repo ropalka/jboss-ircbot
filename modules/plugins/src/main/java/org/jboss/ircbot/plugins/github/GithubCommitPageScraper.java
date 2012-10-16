@@ -28,8 +28,6 @@ import java.net.URL;
 import org.fossnova.json.JsonObject;
 import org.fossnova.json.JsonString;
 import org.fossnova.json.JsonValueFactory;
-import org.fossnova.json.stream.JsonReader;
-import org.fossnova.json.stream.JsonStreamFactory;
 import org.jboss.logging.Logger;
 
 /**
@@ -60,8 +58,7 @@ final class GithubCommitPageScraper {
         try {
             final URL githubCommitPage = new URL( commit.getJsonCommitUrl() );
             is = githubCommitPage.openConnection().getInputStream();
-            final JsonReader jsonReader = JsonStreamFactory.newInstance().newJsonReader( is );
-            final JsonObject jsonCommit = ( JsonObject ) JsonValueFactory.newInstance().readFrom( jsonReader );
+            final JsonObject jsonCommit = ( JsonObject ) JsonValueFactory.newInstance().readFrom( is );
             scrapeAuthor( commit, jsonCommit );
             scrapeDescription( commit, jsonCommit );
         } catch ( final Exception e ) {

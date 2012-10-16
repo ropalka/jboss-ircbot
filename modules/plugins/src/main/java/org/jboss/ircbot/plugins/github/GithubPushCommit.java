@@ -24,61 +24,31 @@ import static org.jboss.ircbot.Character.COLON;
 import static org.jboss.ircbot.Character.LEFT_SQUARE_BRACKET;
 import static org.jboss.ircbot.Character.PERIOD;
 import static org.jboss.ircbot.Character.RIGHT_SQUARE_BRACKET;
-import static org.jboss.ircbot.Character.SLASH;
 import static org.jboss.ircbot.Character.SPACE;
 import static org.jboss.ircbot.Color.BLUE;
 import static org.jboss.ircbot.Color.OLIVE;
+import static org.jboss.ircbot.Color.TEAL;
 import static org.jboss.ircbot.Color.PURPLE;
 import static org.jboss.ircbot.Font.BOLD;
 import static org.jboss.ircbot.Font.NORMAL;
 
-import java.util.StringTokenizer;
-
 /**
- * For Github commit API see <a
- * href="http://developer.github.com/v3/git/commits/">this</a> page.
- * 
  * @author <a href="ropalka@redhat.com">Richard Opalka</a>
  */
-final class GithubCommit {
+final class GithubPushCommit {
 
     private static final int SHA_UPPER_BOUND = 7;
     private static final String GIT_KEYWORD = "git";
+    private static final String PUSH_KEYWORD = "push";
+    private String branch;
     private String commitId;
-    private String commitIdFull;
-    private String userId;
     private String userName;
     private String description;
     private String repository;
-    private final String jsonCommitUrl;
 
-    GithubCommit( final String htmlCommitUrl ) {
-        final StringTokenizer st = new StringTokenizer( htmlCommitUrl, SLASH );
-        // skipping https protocol
-        st.nextToken();
-        // skipping github.com
-        st.nextToken();
-        // setting user Id
-        setUserId( st.nextToken() );
-        // setting repository
-        setRepository( st.nextToken() );
-        // skipping commit string
-        st.nextToken();
-        // setting sha
-        setCommitId( st.nextToken() );
-        // construct commit URL
-        final StringBuilder sb = new StringBuilder();
-        sb.append( "https://api.github.com/repos/" );
-        sb.append( userId ).append( "/" );
-        sb.append( repository ).append( "/git/commits/" );
-        sb.append( commitIdFull );
-        jsonCommitUrl = new String( sb );
+    GithubPushCommit() {
     }
-
-    String getJsonCommitUrl() {
-        return jsonCommitUrl;
-    }
-
+    
     void setUserName( final String userName ) {
         this.userName = userName;
     }
@@ -87,16 +57,15 @@ final class GithubCommit {
         return userName;
     }
 
-    void setUserId( final String userId ) {
-        this.userId = userId;
+    void setBranch( final String branch ) {
+        this.branch = branch;
     }
 
-    String getUserId() {
-        return userId;
+    String getBranch() {
+        return branch;
     }
 
     void setCommitId( final String commitId ) {
-        this.commitIdFull = commitId;
         this.commitId = commitId.substring( 0, SHA_UPPER_BOUND );
     }
 
@@ -128,6 +97,10 @@ final class GithubCommit {
         // Github project name
         sb.append( NORMAL ).append( LEFT_SQUARE_BRACKET ).append( BLUE );
         sb.append( repository ).append( NORMAL ).append( RIGHT_SQUARE_BRACKET ).append( SPACE );
+        // push keyword
+        sb.append( BOLD ).append( PUSH_KEYWORD ).append( SPACE );
+        // branch
+        sb.append( NORMAL ).append( TEAL ).append( branch ).append( SPACE );
         // commit unique prefix
         sb.append( OLIVE ).append( commitId ).append( PERIOD ).append( PERIOD ).append( SPACE );
         // author

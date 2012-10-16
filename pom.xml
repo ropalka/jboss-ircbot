@@ -34,7 +34,8 @@
   <version>1.0.0.Alpha1-SNAPSHOT</version>
 
   <properties>
-    <fossnova.json.version>1.0.0.Beta1</fossnova.json.version>
+    <fossnova.fue.version>1.0.0.Beta1-SNAPSHOT</fossnova.fue.version>
+    <fossnova.json.version>1.0.0.Beta2-SNAPSHOT</fossnova.json.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.checkstyle.plugin.version>2.6</maven.checkstyle.plugin.version>
     <maven.compiler.plugin.version>2.3.1</maven.compiler.plugin.version>
@@ -59,6 +60,12 @@
         <groupId>org.fossnova</groupId>
         <artifactId>fossnova-json-impl</artifactId>
         <version>${fossnova.json.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.fossnova</groupId>
+        <artifactId>fossnova-fue-impl</artifactId>
+        <version>${fossnova.fue.version}</version>
         <scope>provided</scope>
       </dependency>
       <dependency>

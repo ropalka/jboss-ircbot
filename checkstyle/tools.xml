@@ -109,10 +109,6 @@
         <module name="IllegalCatch">
             <property name="illegalClassNames" value="java.lang.Throwable, java.lang.Error, java.lang.RuntimeException"/>
         </module>
-        <!-- Checks for imports from a set of illegal packages. -->
-        <module name="IllegalImport">
-            <property name="illegalPkgs" value="com, sun"/>
-        </module>
         <!-- Checks for illegal instantiations where a factory method is preferred. -->
         <module name="IllegalInstantiation">
             <property name="classes" value="java.lang.Boolean"/>
@@ -203,11 +199,6 @@
         <module name="ModifiedControlVariable"/>
         <!-- Checks that the order of modifiers conforms to the suggestions in the Java Language specification. -->
         <module name="ModifierOrder"/>
-        <!-- Checks for multiple occurrences of the same string literal within a single file. -->
-        <module name="MultipleStringLiterals">
-            <property name="allowedDuplicates" value="1"/>
-            <property name="ignoreOccurrenceContext" value=""/>
-        </module>
         <!-- Checks that each variable declaration is in its own statement and on its own line. -->
         <module name="MultipleVariableDeclarations"/>
         <!-- Ensures that exceptions are immutable. -->
@@ -264,10 +255,6 @@
         <module name="RedundantThrows">
             <property name="logLoadErrors" value="true"/>
             <property name="suppressLoadErrors" value="true"/>
-        </module>
-        <!-- Restricts return statements to a specified count. -->
-        <module name="ReturnCount">
-            <property name="max" value="4"/>
         </module>
         <!-- Checks the placement of right curly braces. -->
         <module name="RightCurly">
