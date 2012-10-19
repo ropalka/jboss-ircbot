@@ -24,11 +24,14 @@ import static org.jboss.ircbot.Command.PRIVMSG;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.jboss.ircbot.AbstractBotService;
 import org.jboss.ircbot.BotException;
+import org.jboss.ircbot.BotRuntime;
 import org.jboss.ircbot.MessageBuilder;
 import org.jboss.ircbot.ServerMessage;
 import org.jboss.ircbot.User;
@@ -39,9 +42,26 @@ import org.jboss.ircbot.User;
 public final class GithubCommitBotService extends AbstractBotService< Void > {
 
     private static final Pattern GITHUB_COMMIT_PATTERN = Pattern.compile( "https://github.com/\\S+/commit/[0-9a-f]+" );
+    private ExecutorService scrapeTasks;
 
     public GithubCommitBotService() {
         super();
+    }
+
+    @Override
+    public void init( final BotRuntime< Void > runtime ) throws BotException {
+        super.init( runtime );
+        scrapeTasks = Executors.newSingleThreadExecutor( GithubCommitThreadFactory.INSTANCE );
+    }
+
+    @Override
+    public void destroy() throws BotException {
+        try {
+            scrapeTasks.shutdownNow();
+            scrapeTasks = null;
+        } finally {
+            super.destroy();
+        }
     }
 
     @Override
@@ -50,13 +70,17 @@ public final class GithubCommitBotService extends AbstractBotService< Void > {
             final String msgTarget = getMessageTarget( msg );
             final Set< String > commitURLs = getGithubCommits( msg );
             for ( final String commitURL : commitURLs ) {
-                final GithubCommit commit = GithubCommitPageScraper.getInstance().scrape( commitURL );
-                if ( commit != null ) {
-                    final MessageBuilder msgBuilder = getMessageFactory().newMessage( PRIVMSG );
-                    msgBuilder.addParam( msgTarget );
-                    msgBuilder.addParam( commit );
-                    getConnection().send( msgBuilder.build() );
-                }
+                scrapeTasks.submit( new Runnable() {
+                    public void run() {
+                        final GithubCommit commit = GithubCommitPageScraper.getInstance().scrape( commitURL );
+                        if ( commit != null ) {
+                            final MessageBuilder msgBuilder = getMessageFactory().newMessage( PRIVMSG );
+                            msgBuilder.addParam( msgTarget );
+                            msgBuilder.addParam( commit );
+                            getConnection().send( msgBuilder.build() );
+                        }
+                    }
+                } );
             }
         }
     }

@@ -24,11 +24,14 @@ import static org.jboss.ircbot.Command.PRIVMSG;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.jboss.ircbot.AbstractBotService;
 import org.jboss.ircbot.BotException;
+import org.jboss.ircbot.BotRuntime;
 import org.jboss.ircbot.ClientMessage;
 import org.jboss.ircbot.Message;
 import org.jboss.ircbot.MessageBuilder;
@@ -42,9 +45,26 @@ import org.jboss.ircbot.plugins.jira.JIRAServiceConfig.JIRATracker;
 public final class JIRABotService extends AbstractBotService< JIRAServiceConfig > {
 
     private static final Pattern JIRA_ID_PATTERN = Pattern.compile( "[A-Z]+[1-9]?-[0-9]+" );
+    private ExecutorService scrapeTasks;
 
     public JIRABotService() {
         super();
+    }
+
+    @Override
+    public void init( final BotRuntime< JIRAServiceConfig > runtime ) throws BotException {
+        super.init( runtime );
+        scrapeTasks = Executors.newFixedThreadPool( 5, JIRAThreadFactory.INSTANCE );
+    }
+
+    @Override
+    public void destroy() throws BotException {
+        try {
+            scrapeTasks.shutdownNow();
+            scrapeTasks = null;
+        } finally {
+            super.destroy();
+        }
     }
 
     @Override
@@ -68,13 +88,17 @@ public final class JIRABotService extends AbstractBotService< JIRAServiceConfig 
             for ( final JIRATracker tracker : getServiceConfig().getTrackers() ) {
                 final String htmlURL = tracker.getHtmlURL();
                 final String jsonURL = tracker.getJsonURL();
-                final JIRAIssue jiraIssue = JIRAIssuePageScraper.getInstance().scrape( jiraCandidate, htmlURL, jsonURL );
-                if ( jiraIssue != null ) {
-                    final MessageBuilder msgBuilder = getMessageFactory().newMessage( PRIVMSG );
-                    msgBuilder.addParam( msgTarget );
-                    msgBuilder.addParam( jiraIssue );
-                    getConnection().send( msgBuilder.build() );
-                }
+                scrapeTasks.submit( new Runnable() {
+                    public void run() {
+                        final JIRAIssue jiraIssue = JIRAIssuePageScraper.getInstance().scrape( jiraCandidate, htmlURL, jsonURL );
+                        if ( jiraIssue != null ) {
+                            final MessageBuilder msgBuilder = getMessageFactory().newMessage( PRIVMSG );
+                            msgBuilder.addParam( msgTarget );
+                            msgBuilder.addParam( jiraIssue );
+                            getConnection().send( msgBuilder.build() );
+                        }
+                    }
+                } );
             }
         }
     }
