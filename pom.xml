@@ -34,7 +34,7 @@
   <version>1.0.0.Alpha1-SNAPSHOT</version>
 
   <properties>
-    <fossnova.fue.version>1.0.0.Beta1-SNAPSHOT</fossnova.fue.version>
+    <fossnova.fue.version>1.0.0.Beta1</fossnova.fue.version>
     <fossnova.json.version>1.0.0.Beta2-SNAPSHOT</fossnova.json.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.checkstyle.plugin.version>2.6</maven.checkstyle.plugin.version>
