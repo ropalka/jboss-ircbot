@@ -38,6 +38,7 @@ import org.jboss.ircbot.MessageBuilder;
 import org.jboss.ircbot.ServerMessage;
 import org.jboss.ircbot.User;
 import org.jboss.ircbot.plugins.jira.JIRAServiceConfig.JIRATracker;
+import org.jboss.logging.Logger;
 
 /**
  * @author <a href="ropalka@redhat.com">Richard Opalka</a>
@@ -45,7 +46,9 @@ import org.jboss.ircbot.plugins.jira.JIRAServiceConfig.JIRATracker;
 public final class JIRABotService extends AbstractBotService< JIRAServiceConfig > {
 
     private static final Pattern JIRA_ID_PATTERN = Pattern.compile( "[A-Z]+[1-9]?-[0-9]+" );
+    private static final Logger LOGGER = Logger.getLogger( JIRABotService.class );
     private ExecutorService scrapeTasks;
+    private Set< String > blackList;
 
     public JIRABotService() {
         super();
@@ -55,11 +58,14 @@ public final class JIRABotService extends AbstractBotService< JIRAServiceConfig 
     public void init( final BotRuntime< JIRAServiceConfig > runtime ) throws BotException {
         super.init( runtime );
         scrapeTasks = Executors.newFixedThreadPool( 5, JIRAThreadFactory.INSTANCE );
+        blackList = new ExpirableCache< String >( 60 );
     }
 
     @Override
     public void destroy() throws BotException {
         try {
+            blackList.clear();
+            blackList = null;
             scrapeTasks.shutdownNow();
             scrapeTasks = null;
         } finally {
@@ -85,17 +91,24 @@ public final class JIRABotService extends AbstractBotService< JIRAServiceConfig 
         final String msgTarget = getMessageTarget( msg );
         final Set< String > jiraCandidates = getJIRACandidates( msg );
         for ( final String jiraCandidate : jiraCandidates ) {
+            if ( blackList.contains( msgTarget + jiraCandidate ) ) {
+                LOGGER.info( jiraCandidate + " black listed for " + msgTarget );
+                continue;
+            }
             for ( final JIRATracker tracker : getServiceConfig().getTrackers() ) {
                 final String htmlURL = tracker.getHtmlURL();
                 final String jsonURL = tracker.getJsonURL();
                 scrapeTasks.submit( new Runnable() {
+
                     public void run() {
                         final JIRAIssue jiraIssue = JIRAIssuePageScraper.getInstance().scrape( jiraCandidate, htmlURL, jsonURL );
                         if ( jiraIssue != null ) {
-                            final MessageBuilder msgBuilder = getMessageFactory().newMessage( PRIVMSG );
-                            msgBuilder.addParam( msgTarget );
-                            msgBuilder.addParam( jiraIssue );
-                            getConnection().send( msgBuilder.build() );
+                            if ( blackList.add( msgTarget + jiraCandidate ) ) {
+                                final MessageBuilder msgBuilder = getMessageFactory().newMessage( PRIVMSG );
+                                msgBuilder.addParam( msgTarget );
+                                msgBuilder.addParam( jiraIssue );
+                                getConnection().send( msgBuilder.build() );
+                            }
                         }
                     }
                 } );
