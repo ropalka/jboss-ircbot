@@ -41,7 +41,7 @@ public interface GithubPushConfig {
         @Binding( nodeName = "channel", isElementNode = false )
         String getChannel();
 
-        @Binding( nodeName = "repository", isElementNode = false )
+        @Binding( nodeName = "onRepositoryChange", isElementNode = false )
         String getRepository();
     }
 }
