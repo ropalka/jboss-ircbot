@@ -6,8 +6,6 @@
 <!-- For available checks, see http://checkstyle.sourceforge.net/availablechecks.html -->
 <module name="Checker">
     <module name="TreeWalker">
-        <!-- Ensures that the names of abstract classes conforming to some regular expression. -->
-        <module name="AbstractClassName"/>
         <!-- This check controls the style with the usage of annotations. -->
         <module name="AnnotationUseStyle">
             <property name="elementStyle" value="compact_no_array"/>
