@@ -24,7 +24,6 @@ import static org.jboss.ircbot.Character.COLON;
 import static org.jboss.ircbot.Character.LEFT_SQUARE_BRACKET;
 import static org.jboss.ircbot.Character.RIGHT_SQUARE_BRACKET;
 import static org.jboss.ircbot.Character.SPACE;
-import static org.jboss.ircbot.Color.BLACK;
 import static org.jboss.ircbot.Color.BLUE;
 import static org.jboss.ircbot.Color.TEAL;
 import static org.jboss.ircbot.Font.BOLD;
@@ -82,7 +81,7 @@ final class GithubPushCompare {
         // branch
         sb.append( NORMAL ).append( TEAL ).append( branch ).append( SPACE );
         // URL keyword
-        sb.append( BOLD ).append( BLACK ).append( URL_KEYWORD ).append( COLON ).append( SPACE );
+        sb.append( NORMAL ).append( BOLD ).append( URL_KEYWORD ).append( COLON ).append( SPACE );
         // compare URL
         sb.append( NORMAL ).append( compareURL );
         return sb.toString();

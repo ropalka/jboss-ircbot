@@ -34,7 +34,7 @@
   <version>1.0.0.Alpha1-SNAPSHOT</version>
 
   <properties>
-    <fossnova.fue.version>1.0.0.Beta1</fossnova.fue.version>
+    <fossnova.fue.version>1.0.0.Beta2-SNAPSHOT</fossnova.fue.version>
     <fossnova.json.version>1.0.0.Beta2-SNAPSHOT</fossnova.json.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.checkstyle.plugin.version>2.9.1</maven.checkstyle.plugin.version>
@@ -43,7 +43,7 @@
     <maven.surefire.plugin.version>2.11</maven.surefire.plugin.version>
     <jboss.logging.version>3.1.2.GA</jboss.logging.version>
     <jboss.modules.version>1.1.3.GA</jboss.modules.version>
-    <jboss.msc.version>1.0.2.GA</jboss.msc.version>
+    <jboss.msc.version>1.0.3.GA</jboss.msc.version>
     <x2jb.version>2.0</x2jb.version>
   </properties>
 
