@@ -39,8 +39,6 @@
         <module name="ClassDataAbstractionCoupling">
             <property name="max" value="7"/>
         </module>
-        <!-- The number of other classes a given class relies on. -->
-        <module name="ClassFanOutComplexity"/>
         <!-- Checks that class type parameter names conform to a format specified by the format property. -->
         <module name="ClassTypeParameterName">
             <property name="format" value="^[A-Z]$"/>

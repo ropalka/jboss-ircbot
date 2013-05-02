@@ -48,7 +48,7 @@ final class GithubPushCommit {
 
     GithubPushCommit() {
     }
-    
+
     void setUserName( final String userName ) {
         this.userName = userName;
     }
@@ -101,10 +101,14 @@ final class GithubPushCommit {
         sb.append( BOLD ).append( PUSH_KEYWORD ).append( SPACE );
         // branch
         sb.append( NORMAL ).append( TEAL ).append( branch ).append( SPACE );
-        // commit unique prefix
-        sb.append( OLIVE ).append( commitId ).append( PERIOD ).append( PERIOD ).append( SPACE );
-        // author
-        sb.append( PURPLE ).append( userName ).append( SPACE );
+        if ( commitId != null ) {
+            // commit unique prefix
+            sb.append( OLIVE ).append( commitId ).append( PERIOD ).append( PERIOD ).append( SPACE );
+        }
+        if ( userName != null ) {
+            // author
+            sb.append( PURPLE ).append( userName ).append( SPACE );
+        }
         // description
         sb.append( NORMAL ).append( description );
         return sb.toString();

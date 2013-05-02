@@ -43,7 +43,7 @@ final class GithubPushCompare {
 
     GithubPushCompare() {
     }
-    
+
     void setBranch( final String branch ) {
         this.branch = branch;
     }

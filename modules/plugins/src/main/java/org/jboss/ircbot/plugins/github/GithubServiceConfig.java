@@ -20,24 +20,28 @@
  */
 package org.jboss.ircbot.plugins.github;
 
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.atomic.AtomicInteger;
+import org.x2jb.bind.Binding;
 
 /**
  * @author <a href="ropalka@redhat.com">Richard Opalka</a>
  */
-final class GithubCommitThreadFactory implements ThreadFactory {
+public interface GithubServiceConfig {
 
-    static final ThreadFactory INSTANCE = new GithubCommitThreadFactory();
-    private final AtomicInteger threadNumber = new AtomicInteger( 1 );
+    @Binding( nodeName = "httpServerPort", isElementNode = false )
+    int getHttpServerPort();
 
-    private GithubCommitThreadFactory() {
-    }
+    @Binding( nodeName = "httpServerHost", isElementNode = false )
+    String getHttpServerHost();
 
-    public Thread newThread( final Runnable r ) {
-        final Thread t = new Thread( r, "Github Commit Service Worker Thread " + threadNumber.getAndIncrement() );
-        t.setDaemon( true );
-        t.setPriority( Thread.NORM_PRIORITY );
-        return t;
+    @Binding( nodeName = "notify", isNodeUnique = false )
+    Notify[] getNotifications();
+
+    interface Notify {
+
+        @Binding( nodeName = "channel", isElementNode = false )
+        String getChannel();
+
+        @Binding( nodeName = "onRepositoryChange", isElementNode = false )
+        String getRepository();
     }
 }

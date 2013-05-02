@@ -31,54 +31,52 @@ import org.fossnova.json.JsonValueFactory;
 import org.jboss.logging.Logger;
 
 /**
- * For Github commit API see <a
- * href="http://developer.github.com/v3/git/commits/">this</a> page.
+ * For Github pull API see <a
+ * href="http://developer.github.com/v3/pulls/">this</a> page.
  * 
  * @author <a href="ropalka@redhat.com">Richard Opalka</a>
  */
-final class GithubCommitPageScraper {
+final class GithubPullRequestPageScraper {
 
-    private static final Logger LOGGER = Logger.getLogger( GithubCommitPageScraper.class );
-    private static final GithubCommitPageScraper INSTANCE = new GithubCommitPageScraper();
-    private static final String AUTHOR = "author";
-    private static final String MESSAGE = "message";
-    private static final String NAME = "name";
+    private static final Logger LOGGER = Logger.getLogger( GithubPullRequestPageScraper.class );
+    private static final GithubPullRequestPageScraper INSTANCE = new GithubPullRequestPageScraper();
+    private static final String STATE = "state";
+    private static final String TITLE = "title";
 
-    private GithubCommitPageScraper() {
+    private GithubPullRequestPageScraper() {
         // forbidden inheritance
     }
 
-    static GithubCommitPageScraper getInstance() {
+    static GithubPullRequestPageScraper getInstance() {
         return INSTANCE;
     }
 
-    GithubCommit scrape( final String commitURL ) {
-        final GithubCommit commit = new GithubCommit( commitURL );
+    GithubPullRequest scrape( final String pullRequestURL ) {
+        final GithubPullRequest pullRequest = new GithubPullRequest( pullRequestURL );
         InputStream is = null;
         try {
-            final URL githubCommitPage = new URL( commit.getJsonCommitUrl() );
-            is = githubCommitPage.openConnection().getInputStream();
-            final JsonObject jsonCommit = ( JsonObject ) JsonValueFactory.newInstance().readFrom( is );
-            LOGGER.info( jsonCommit.toString() );
-            scrapeAuthor( commit, jsonCommit );
-            scrapeDescription( commit, jsonCommit );
+            final URL githubPullRequestPage = new URL( pullRequest.getJsonURL() );
+            is = githubPullRequestPage.openConnection().getInputStream();
+            final JsonObject jsonPullRequest = ( JsonObject ) JsonValueFactory.newInstance().readFrom( is );
+            LOGGER.info( jsonPullRequest.toString() );
+            scrapeStatus( pullRequest, jsonPullRequest );
+            scrapeDescription( pullRequest, jsonPullRequest );
         } catch ( final Exception e ) {
             LOGGER.error( e.getMessage(), e );
         } finally {
             safeClose( is );
         }
-        return commit.getDescription() != null ? commit : null;
+        return pullRequest.getDescription() != null ? pullRequest : null;
     }
 
-    private static void scrapeDescription( final GithubCommit commit, final JsonObject commitData ) {
-        final JsonString msg = ( JsonString ) commitData.get( MESSAGE );
-        commit.setDescription( msg.getString() );
+    private static void scrapeDescription( final GithubPullRequest pullRequest, final JsonObject pullRequestData ) {
+        final JsonString description = ( JsonString ) pullRequestData.get( TITLE );
+        pullRequest.setDescription( description.getString() );
     }
 
-    private static void scrapeAuthor( final GithubCommit commit, final JsonObject commitData ) {
-        final JsonObject author = ( JsonObject ) commitData.get( AUTHOR );
-        final JsonString authorName = ( JsonString ) author.get( NAME );
-        commit.setUserName( authorName.getString() );
+    private static void scrapeStatus( final GithubPullRequest pullRequest, final JsonObject pullRequestData ) {
+        final JsonString status = ( JsonString ) pullRequestData.get( STATE );
+        pullRequest.setStatus( status.getString() );
     }
 
     private static void safeClose( final Closeable closeable ) {

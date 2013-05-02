@@ -34,7 +34,7 @@ import org.fossnova.json.JsonValueFactory;
 import org.jboss.ircbot.MessageBuilder;
 import org.jboss.ircbot.MessageFactory;
 import org.jboss.ircbot.ServerConnection;
-import org.jboss.ircbot.plugins.github.GithubPushConfig.Notify;
+import org.jboss.ircbot.plugins.github.GithubServiceConfig.Notify;
 import org.jboss.logging.Logger;
 
 import com.sun.net.httpserver.Headers;
@@ -42,14 +42,19 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
 /**
+ * For Github hooks API see <a
+ * href="http://developer.github.com/v3/repos/hooks/">this</a> page.
+ * 
  * @author <a href="ropalka@redhat.com">Richard Opalka</a>
  */
-final class GithubPushHttpHandler implements HttpHandler {
+final class GithubNotificationHandler implements HttpHandler {
 
+    private static final int MAX_COUNT_OF_COMMITS_TO_DISPLAY = 10;
     private static final String CONTENT_LENGTH_HEADER = "Content-Length";
     private static final String CONTENT_TYPE_HEADER = "Content-Type";
     private static final String GITHUB_EVENT_HEADER = "X-Github-Event";
     private static final String GITHUB_PUSH_EVENT = "push";
+    private static final String GITHUB_PULL_EVENT = "pull_request";
     private static final String FORM_URL_ENCODING_CONTENT_TYPE = "application/x-www-form-urlencoded";
     private static final String PAYLOAD = "payload";
     private static final String AUTHOR = "author";
@@ -57,16 +62,21 @@ final class GithubPushHttpHandler implements HttpHandler {
     private static final String COMPARE = "compare";
     private static final String ID = "id";
     private static final String MESSAGE = "message";
+    private static final String SENDER = "sender";
+    private static final String LOGIN = "login";
     private static final String NAME = "name";
     private static final String REF = "ref";
     private static final String REPOSITORY = "repository";
     private static final String URL = "url";
-    private static final Logger LOGGER = Logger.getLogger( GithubPushHttpHandler.class );
+    private static final String HTML_URL = "html_url";
+    private static final String STATE = "state";
+    private static final String TITLE = "title";
+    private static final Logger LOGGER = Logger.getLogger( GithubNotificationHandler.class );
     private final ServerConnection conn;
     private final MessageFactory msgFactory;
     private final Notify[] notifications;
 
-    GithubPushHttpHandler( final ServerConnection conn, final MessageFactory msgFactory, final Notify[] notifications ) {
+    GithubNotificationHandler( final ServerConnection conn, final MessageFactory msgFactory, final Notify[] notifications ) {
         this.conn = conn;
         this.msgFactory = msgFactory;
         this.notifications = notifications;
@@ -76,10 +86,13 @@ final class GithubPushHttpHandler implements HttpHandler {
         try {
             final Headers headers = msg.getRequestHeaders();
             if ( isGithubPushRequest( headers ) ) {
-                final JsonObject pushData = getPushData( msg );
+                LOGGER.info( "Github push event detected" );
+                final JsonObject pushData = getPayloadData( msg );
                 if ( pushData != null ) {
-                    final String repositoryURL = scrapeRepositoryURL( pushData );
+                    LOGGER.info( pushData.toString() );
+                    final String repositoryURL = scrapeRepositoryURL( pushData, true );
                     final boolean sendNotification = isNotificationRequested( repositoryURL );
+                    LOGGER.info( "sendNotification == " + sendNotification );
                     if ( sendNotification ) {
                         final String repository = scrapeRepository( pushData );
                         final String branch = scrapeBranch( pushData );
@@ -88,21 +101,44 @@ final class GithubPushHttpHandler implements HttpHandler {
                         notifyChannels( commits, compare, repositoryURL );
                     }
                 }
+            } else if ( isGithubPullRequest( headers ) ) {
+                LOGGER.info( "Github pull request detected" );
+                final JsonObject pullData = getPayloadData( msg );
+                if ( pullData != null ) {
+                    LOGGER.info( pullData.toString() );
+                    final String repositoryURL = scrapeRepositoryURL( pullData, false );
+                    final boolean sendNotification = isNotificationRequested( repositoryURL );
+                    LOGGER.info( "sendNotification == " + sendNotification );
+                    if ( sendNotification ) {
+                        final GithubPullRequest pullRequest = scrapePullRequest( pullData );
+                        notifyChannels( pullRequest, repositoryURL );
+                    }
+                }
             }
         } finally {
             msg.sendResponseHeaders( 200, -1 );
         }
     }
 
+    private GithubPullRequest scrapePullRequest( final JsonObject pullData ) {
+        final String repository = scrapeRepository( pullData );
+        final String sender = scrapeSender( pullData );
+        final String pullUrl = scrapePullUrl( pullData );
+        final String state = scrapeState( pullData );
+        final String title = scrapeTitle( pullData );
+        return new GithubPullRequest( true, repository, state, sender, title, pullUrl );
+    }
+
     private boolean isGithubPushRequest( final Headers headers ) {
-        // ensure X-Github-Event HTTP header is present and holding expected value
+        // ensure X-Github-Event HTTP header is present and holding expected
+        // value
         if ( !headers.containsKey( GITHUB_EVENT_HEADER ) ) {
             LOGGER.warn( "Missing HTTP header: " + GITHUB_EVENT_HEADER );
             return false;
         }
         final String currentEvent = headers.getFirst( GITHUB_EVENT_HEADER );
         if ( !GITHUB_PUSH_EVENT.equals( currentEvent ) ) {
-            LOGGER.warn( "Not Github push event. Current event is: '" + currentEvent + "'" );
+            LOGGER.warn( "Not Github " + GITHUB_PULL_EVENT + " event. Current event is: '" + currentEvent + "'" );
             return false;
         }
         // ensure Content-Type HTTP header is present and holding expected value
@@ -123,7 +159,37 @@ final class GithubPushHttpHandler implements HttpHandler {
         return true;
     }
 
-    private JsonObject getPushData( final HttpExchange msg ) throws IOException {
+    private boolean isGithubPullRequest( final Headers headers ) {
+        // ensure X-Github-Event HTTP header is present and holding expected
+        // value
+        if ( !headers.containsKey( GITHUB_EVENT_HEADER ) ) {
+            LOGGER.warn( "Missing HTTP header: " + GITHUB_EVENT_HEADER );
+            return false;
+        }
+        final String currentEvent = headers.getFirst( GITHUB_EVENT_HEADER );
+        if ( !GITHUB_PULL_EVENT.equals( currentEvent ) ) {
+            LOGGER.warn( "Not Github " + GITHUB_PULL_EVENT + " event. Current event is: '" + currentEvent + "'" );
+            return false;
+        }
+        // ensure Content-Type HTTP header is present and holding expected value
+        if ( !headers.containsKey( CONTENT_TYPE_HEADER ) ) {
+            LOGGER.warn( "Missing HTTP header: " + CONTENT_TYPE_HEADER );
+            return false;
+        }
+        final String contentType = headers.getFirst( CONTENT_TYPE_HEADER );
+        if ( !FORM_URL_ENCODING_CONTENT_TYPE.equals( contentType ) ) {
+            LOGGER.warn( "Not Github push event. Current event is: '" + contentType + "'" );
+            return false;
+        }
+        // ensure Content-Length HTTP header is present
+        if ( !headers.containsKey( CONTENT_LENGTH_HEADER ) ) {
+            LOGGER.warn( "Missing HTTP header " + CONTENT_LENGTH_HEADER );
+            return false;
+        }
+        return true;
+    }
+
+    private JsonObject getPayloadData( final HttpExchange msg ) throws IOException {
         InputStream is = null;
         try {
             is = msg.getRequestBody();
@@ -174,6 +240,18 @@ final class GithubPushHttpHandler implements HttpHandler {
         }
     }
 
+    private void notifyChannels( final GithubPullRequest pullReq, final String repositoryURL ) {
+        for ( final Notify notification : notifications ) {
+            if ( notification.getRepository().startsWith( repositoryURL ) ) {
+                // send pull request
+                final MessageBuilder msgBuilder = msgFactory.newMessage( PRIVMSG );
+                msgBuilder.addParam( notification.getChannel() );
+                msgBuilder.addParam( pullReq );
+                conn.send( msgBuilder.build() );
+            }
+        }
+    }
+
     private String scrapeBranch( final JsonObject pushData ) {
         final String branchReference = ( ( JsonString ) pushData.get( REF ) ).getString();
         return branchReference.substring( branchReference.lastIndexOf( "/" ) + 1 );
@@ -185,19 +263,54 @@ final class GithubPushHttpHandler implements HttpHandler {
         return repositoryName.getString();
     }
 
-    private String scrapeRepositoryURL( final JsonObject pushData ) {
-        final JsonObject repository = ( JsonObject ) pushData.get( REPOSITORY );
-        final JsonString repositoryURL = ( JsonString ) repository.get( URL );
+    private String scrapeSender( final JsonObject pullData ) {
+        final JsonObject sender = ( JsonObject ) pullData.get( SENDER );
+        final JsonString login = ( JsonString ) sender.get( LOGIN );
+        return login.getString();
+    }
+
+    private String scrapePullUrl( final JsonObject pullData ) {
+        final JsonObject pullRequest = ( JsonObject ) pullData.get( GITHUB_PULL_EVENT );
+        final JsonString htmlUrl = ( JsonString ) pullRequest.get( HTML_URL );
+        return htmlUrl.getString();
+    }
+
+    private String scrapeState( final JsonObject pullData ) {
+        final JsonObject pullRequest = ( JsonObject ) pullData.get( GITHUB_PULL_EVENT );
+        final JsonString state = ( JsonString ) pullRequest.get( STATE );
+        return state.getString();
+    }
+
+    private String scrapeTitle( final JsonObject pullData ) {
+        final JsonObject pullRequest = ( JsonObject ) pullData.get( GITHUB_PULL_EVENT );
+        final JsonString title = ( JsonString ) pullRequest.get( TITLE );
+        return title.getString();
+    }
+
+    private String scrapeRepositoryURL( final JsonObject jsonData, final boolean pushRequest ) {
+        final JsonObject repository = ( JsonObject ) jsonData.get( REPOSITORY );
+        final JsonString repositoryURL = ( JsonString ) repository.get( pushRequest ? URL : HTML_URL );
         return repositoryURL.getString();
     }
 
     private GithubPushCommit[] scrapeCommits( final String repository, final String branch, final JsonObject pushData ) {
         final JsonArray commits = ( JsonArray ) pushData.get( COMMITS );
-        final GithubPushCommit[] retVal = new GithubPushCommit[ commits.size() ];
-        JsonObject commitData = null;
-        for ( int i = 0; i < commits.size(); i++ ) {
-            commitData = ( JsonObject ) commits.get( i );
-            retVal[ i ] = scrapeCommit( repository, branch, commitData );
+        final GithubPushCommit[] retVal;
+        if ( commits.size() <= MAX_COUNT_OF_COMMITS_TO_DISPLAY ) {
+            retVal = new GithubPushCommit[ commits.size() ];
+            JsonObject commitData = null;
+            for ( int i = 0; i < commits.size(); i++ ) {
+                commitData = ( JsonObject ) commits.get( i );
+                retVal[ i ] = scrapeCommit( repository, branch, commitData );
+            }
+        } else {
+            retVal = new GithubPushCommit[ MAX_COUNT_OF_COMMITS_TO_DISPLAY + 1 ];
+            JsonObject commitData = null;
+            for ( int i = 0; i < MAX_COUNT_OF_COMMITS_TO_DISPLAY; i++ ) {
+                commitData = ( JsonObject ) commits.get( i );
+                retVal[ i ] = scrapeCommit( repository, branch, commitData );
+            }
+            retVal[ MAX_COUNT_OF_COMMITS_TO_DISPLAY ] = fakeCommit( repository, branch, commits.size() - MAX_COUNT_OF_COMMITS_TO_DISPLAY ); 
         }
         return retVal;
     }
@@ -231,6 +344,22 @@ final class GithubPushHttpHandler implements HttpHandler {
         final JsonObject commitAuthor = ( JsonObject ) commitData.get( AUTHOR );
         final JsonString authorName = ( JsonString ) commitAuthor.get( NAME );
         commit.setUserName( authorName.getString() );
+        // return wrapper
+        return commit;
+    }
+
+    private GithubPushCommit fakeCommit( final String repository, final String branch, final int countOfHiddenCommits ) {
+        final GithubPushCommit commit = new GithubPushCommit();
+        // set repository
+        commit.setRepository( repository );
+        // set branch
+        commit.setBranch( branch );
+        // fake commit description
+        if ( countOfHiddenCommits == 1 ) {
+            commit.setDescription( "(" + countOfHiddenCommits + " additional commit not shown)" );
+        } else {
+            commit.setDescription( "(" + countOfHiddenCommits + " additional commits not shown)" );
+        }
         // return wrapper
         return commit;
     }

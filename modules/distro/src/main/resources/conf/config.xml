@@ -28,8 +28,7 @@
     <processor name="login" class="org.jboss.ircbot.plugins.login.LoginBotService"/>
     <processor name="pong" class="org.jboss.ircbot.plugins.pong.PONGBotService"/>
     <processor name="log" class="org.jboss.ircbot.plugins.logs.LoggingBotService"/>
-    <processor name="github.commit" class="org.jboss.ircbot.plugins.github.GithubCommitBotService"/>
-    <processor name="github.push" class="org.jboss.ircbot.plugins.github.GithubPushBotService">
+    <processor name="github" class="org.jboss.ircbot.plugins.github.GithubBotService">
       <config httpServerHost="127.0.0.1" httpServerPort="8180">
         <notify
           channel="#praha"
