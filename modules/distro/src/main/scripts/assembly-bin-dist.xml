@@ -62,6 +62,7 @@
       <outputDirectory>bin-dist/lib</outputDirectory>
       <unpack>false</unpack>
       <includes>
+        <include>org.fossnova:fossnova-io:jar</include>
         <include>org.fossnova:fossnova-factory-finder:jar</include>
         <include>org.fossnova:fossnova-fue-api:jar</include>
         <include>org.fossnova:fossnova-fue-impl:jar</include>

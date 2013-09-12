@@ -34,6 +34,7 @@
   <version>1.0.0.Alpha1-SNAPSHOT</version>
 
   <properties>
+    <fossnova.io.version>1.0.0.Beta1-SNAPSHOT</fossnova.io.version>
     <fossnova.fue.version>1.0.0.Beta2-SNAPSHOT</fossnova.fue.version>
     <fossnova.json.version>1.0.0.Beta2-SNAPSHOT</fossnova.json.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -56,6 +57,12 @@
 
   <dependencyManagement>
     <dependencies>
+      <dependency>
+        <groupId>org.fossnova</groupId>
+        <artifactId>fossnova-io</artifactId>
+        <version>${fossnova.io.version}</version>
+        <scope>provided</scope>
+      </dependency>
       <dependency>
         <groupId>org.fossnova</groupId>
         <artifactId>fossnova-json-impl</artifactId>
