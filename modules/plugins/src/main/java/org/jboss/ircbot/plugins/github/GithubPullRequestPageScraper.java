@@ -57,7 +57,7 @@ final class GithubPullRequestPageScraper {
         try {
             final URL githubPullRequestPage = new URL( pullRequest.getJsonURL() );
             is = githubPullRequestPage.openConnection().getInputStream();
-            final JsonObject jsonPullRequest = ( JsonObject ) JsonValueFactory.newInstance().readFrom( is );
+            final JsonObject jsonPullRequest = ( JsonObject ) JsonValueFactory.getInstance().readFrom( is );
             LOGGER.info( jsonPullRequest.toString() );
             scrapeStatus( pullRequest, jsonPullRequest );
             scrapeDescription( pullRequest, jsonPullRequest );

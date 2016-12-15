@@ -203,7 +203,7 @@ final class GithubNotificationHandler implements HttpHandler {
             // read JSON value
             fueReader.next();
             final String jsonString = fueReader.getValue();
-            return ( JsonObject ) JsonValueFactory.newInstance().readFrom( jsonString );
+            return ( JsonObject ) JsonValueFactory.getInstance().readFrom( jsonString );
         } catch ( final Exception e ) {
             LOGGER.fatal( e.getMessage(), e );
         } finally {

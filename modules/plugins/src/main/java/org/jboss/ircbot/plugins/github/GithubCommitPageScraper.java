@@ -58,7 +58,7 @@ final class GithubCommitPageScraper {
         try {
             final URL githubCommitPage = new URL( commit.getJsonCommitUrl() );
             is = githubCommitPage.openConnection().getInputStream();
-            final JsonObject jsonCommit = ( JsonObject ) JsonValueFactory.newInstance().readFrom( is );
+            final JsonObject jsonCommit = ( JsonObject ) JsonValueFactory.getInstance().readFrom( is );
             LOGGER.info( jsonCommit.toString() );
             scrapeAuthor( commit, jsonCommit );
             scrapeDescription( commit, jsonCommit );

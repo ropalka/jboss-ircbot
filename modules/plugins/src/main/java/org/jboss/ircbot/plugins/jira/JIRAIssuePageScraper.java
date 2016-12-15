@@ -71,8 +71,8 @@ final class JIRAIssuePageScraper {
         try {
             final URL jiraIssuePage = new URL( jiraIssue.getJsonURL() );
             is = jiraIssuePage.openConnection().getInputStream();
-            final JsonReader jsonReader = JsonStreamFactory.newInstance().newJsonReader( is );
-            final JsonObject jsonObject = ( JsonObject ) JsonValueFactory.newInstance().readFrom( jsonReader );
+            final JsonReader jsonReader = JsonStreamFactory.getInstance().newJsonReader( is );
+            final JsonObject jsonObject = ( JsonObject ) JsonValueFactory.getInstance().readFrom( jsonReader );
             final JsonObject fieldsObject = ( JsonObject ) jsonObject.get( "fields" );
             scrapeAssignee( jiraIssue, fieldsObject );
             scrapeDescription( jiraIssue, fieldsObject );
