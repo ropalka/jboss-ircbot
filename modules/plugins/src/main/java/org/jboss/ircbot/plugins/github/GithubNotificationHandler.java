@@ -25,7 +25,7 @@ import static org.jboss.ircbot.Command.PRIVMSG;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.fossnova.fue.stream.FueFactory;
+import org.fossnova.fue.stream.FueStreamFactory;
 import org.fossnova.fue.stream.FueReader;
 import org.fossnova.json.JsonArray;
 import org.fossnova.json.JsonObject;
@@ -193,7 +193,7 @@ final class GithubNotificationHandler implements HttpHandler {
         InputStream is = null;
         try {
             is = msg.getRequestBody();
-            final FueReader fueReader = FueFactory.newInstance().newFueReader( is );
+            final FueReader fueReader = FueStreamFactory.getInstance().newFueReader( is );
             // read payload key
             fueReader.next();
             if ( !PAYLOAD.equals( fueReader.getKey() ) ) {
